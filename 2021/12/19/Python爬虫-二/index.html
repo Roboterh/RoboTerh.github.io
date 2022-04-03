@@ -1,88 +1,484 @@
-.post-block {
-  color: var(--hty-text-color);
-  margin: 0 1rem;
-  padding: 1rem;
-  background-color: var(--post-block-bg-color);
-mobile()
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="RoboTerh"><meta name="copyright" content="RoboTerh"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Python爬虫(二) | RoboTerh</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
 }
-.post-body {
-  padding: 0 5rem;
-tablet()
-mobile()
-}
-.post-content {
-  padding: 20px 0px;
-}
-.post-meta {
-  font-size: 14px;
-  color: var(--hty-secondary-text-color);
-}
-.post-meta .icon {
-  margin-bottom: -1px;
-}
-.post-description {
-  font-weight: normal;
-  padding: 0.5rem;
-}
-.post-author {
-  display: flex;
-  justify-content: center;
-}
-.post-author .author-avatar {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-}
-.post-author .author-avatar img {
-  border-radius: 50%;
-  height: 1rem;
-  width: 1rem;
-  padding: 2px;
-  border: 2px solid #d3d3d3;
-}
-.post-author .author-name {
-  margin-left: 0.5rem;
-  font-size: 1rem;
-}
-.post-meta-item-icon {
-  display: inline-block;
-  color: var(--text-color, --hty-secondary-text-color);
-}
-.post-meta-divider {
-  height: 25px;
-  color: var(--hty-secondary-text-color);
-  margin: 0 0.5rem;
-}
-.post-eof {
-  margin: 50px auto;
-  width: 50%;
-  height: 1px;
-  background: $blue;
-  opacity: 0.1;
-}
-.post-copyright {
-  font-size: 0.9rem;
-  margin: 2rem 0;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid #ff5252;
-  background-color: var(--hty-bg-color);
-  list-style: none;
-  word-break: break-all;
-  position: relative;
-  overflow: hidden;
-}
-.post-copyright::after {
-  position: absolute;
-  color: #fff;
-  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
-  content: ' ';
-  height: 10rem;
-  width: 10rem;
-  right: -2rem;
-  top: -2rem;
-  opacity: 0.1;
-}
-.tag-name {
-  padding: 0 0.1rem;
-}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"roboterh.github.io","root":"/","title":["ROBO","TERH","BLOG","小站"],"version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><script>CONFIG.leancloudVisitors = {"enable":true,"app_id":"QzEMTRDcJM476WmFbFsyqtOV-MdYXbMMI","app_key":"Ovrs8D1mvkchhDyViQ6oVoQq","server_url":"https://roboterh.github.io"}</script><script defer src="/js/analytics/leancloud-visitors.js"></script><meta name="description" content="selenium案例继续上一篇文章 使用Chrome的检查定位评论位置  我们可以提取评论数据 from selenium import webdriver driver &#x3D; webdriver.Firefox(executable_path&#x3D;&quot;D:\GeckoDriver\geckodriver&quot;) # driver.get(&quot;http:&#x2F;&#x2F;www.santostang.com&#x2F;2018&#x2F;07&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫(二)">
+<meta property="og:url" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/index.html">
+<meta property="og:site_name" content="RoboTerh">
+<meta property="og:description" content="selenium案例继续上一篇文章 使用Chrome的检查定位评论位置  我们可以提取评论数据 from selenium import webdriver driver &#x3D; webdriver.Firefox(executable_path&#x3D;&quot;D:\GeckoDriver\geckodriver&quot;) # driver.get(&quot;http:&#x2F;&#x2F;www.santostang.com&#x2F;2018&#x2F;07&#x2F;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211219224320568.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225163004673.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225163311988.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225175429389.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225203549210.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225210640901.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225215407861.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211225221927663.png">
+<meta property="og:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211226165119270.png">
+<meta property="article:published_time" content="2021-12-19T14:20:04.000Z">
+<meta property="article:modified_time" content="2021-12-26T08:51:42.924Z">
+<meta property="article:author" content="RoboTerh">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="python爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/image-20211219224320568.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RoboTerh"><img width="96" loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/8@XK~G6IIG(3~I6J~C6M4JB.png" alt="RoboTerh"><span class="site-author-status" title="wwww我好菜">-_-</span></a><div class="site-author-name"><a href="/about/">RoboTerh</a></div><span class="site-name">RoboTerh</span><sub class="site-subtitle"></sub><div class="site-desciption">无聊的时候记录记录自己的学习啊</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">27</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">17</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/F0A770ED0C75BC233DA1034B4C80E8DA.png" title="QQ" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2865153524@qq.com" title="E-Mail" target="_blank" style="color:8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#selenium%E6%A1%88%E4%BE%8B"><span class="toc-number">1.</span> <span class="toc-text">selenium案例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E8%AF%84%E8%AE%BA"><span class="toc-number"></span> <span class="toc-text">获取所有评论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E8%AF%84%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">模拟点击加载评论</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Selenium%E7%9A%84%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="toc-number"></span> <span class="toc-text">Selenium的高级操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CSS%E6%8E%A7%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">CSS控制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E5%9B%BE%E7%89%87%E7%9A%84%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.</span> <span class="toc-text">限制图片的加载</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%99%90%E5%88%B6javascript%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="toc-number">3.</span> <span class="toc-text">限制javascript的执行</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number"></span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8F12%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD"><span class="toc-number">1.</span> <span class="toc-text">使用F12检查功能</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%8A%93%E5%8F%96"><span class="toc-number">2.</span> <span class="toc-text">开始抓取</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E7%BD%91%E9%A1%B5"><span class="toc-number"></span> <span class="toc-text">解析网页</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E7%BD%91%E9%A1%B5"><span class="toc-number">1.</span> <span class="toc-text">使用正则表达式解析网页</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">正则的使用方法</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8bs4%E8%A7%A3%E6%9E%90%E7%BD%91%E9%A1%B5"><span class="toc-number">2.</span> <span class="toc-text">使用bs4解析网页</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E6%96%87%E6%A1%A3%E6%A0%91"><span class="toc-number">2.1.</span> <span class="toc-text">遍历文档树</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E6%96%87%E6%A1%A3%E6%A0%91"><span class="toc-number">2.2.</span> <span class="toc-text">搜索文档树</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#CSS%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">CSS选择器</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A9%E7%94%A8lxml%E8%A7%A3%E6%9E%90%E7%BD%91%E9%A1%B5"><span class="toc-number">3.</span> <span class="toc-text">利用lxml解析网页</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-1"><span class="toc-number"></span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8F12%E7%9A%84%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD"><span class="toc-number">1.</span> <span class="toc-text">使用F12的检查功能</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E7%AC%AC%E4%B8%80%E9%A1%B5%E6%95%B0%E6%8D%AE"><span class="toc-number">2.</span> <span class="toc-text">抓取第一页数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E5%89%8D%E5%8D%81%E9%A1%B5%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">3.</span> <span class="toc-text">抓取前十页的数据</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="toc-number"></span> <span class="toc-text">数据存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%AD%98%E5%82%A8"><span class="toc-number">1.</span> <span class="toc-text">基本存储</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%BF%9B%E5%85%A5TXT%E6%96%87%E6%9C%AC"><span class="toc-number">1.1.</span> <span class="toc-text">存储进入TXT文本</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%BF%9B%E5%85%A5CSV"><span class="toc-number">1.2.</span> <span class="toc-text">存储进入CSV</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%88%B0mysql%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.</span> <span class="toc-text">存储到mysql数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#python%E6%93%8D%E6%8E%A7mysql"><span class="toc-number">2.1.</span> <span class="toc-text">python操控mysql</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%88%B0mongodb%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">存储到mongodb数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#python%E6%93%8D%E6%8E%A7mongodb"><span class="toc-number">3.1.</span> <span class="toc-text">python操控mongodb</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://RoboTerh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RoboTerh"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="RoboTerh"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Python爬虫(二)</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2021-12-19 22:20:04" itemprop="dateCreated datePublished" datetime="2021-12-19T22:20:04+08:00">2021-12-19</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-12-26 16:51:42" itemprop="dateModified" datetime="2021-12-26T16:51:42+08:00">2021-12-26</time></div><span class="leancloud_visitors" id="/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/" data-flag-title="Python爬虫(二)"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span class="leancloud-visitors-count"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/language/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">language</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/python/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">python</span></a><a class="tag-item" href="/tags/python%E7%88%AC%E8%99%AB/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">python爬虫</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h5 id="selenium案例"><a href="#selenium案例" class="headerlink" title="selenium案例"></a>selenium案例</h5><p><a href="https://roboterh.github.io/2021/12/17/Python%E7%88%AC%E8%99%AB-%E4%B8%80/">继续上一篇文章</a></p>
+<p>使用Chrome的检查定位评论位置</p>
+<p><img src="image-20211219224320568.png" alt="image-20211219224320568" loading="lazy"></p>
+<p>我们可以提取评论数据</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>executable_path<span class="token operator">=</span><span class="token string">"D:\GeckoDriver\geckodriver"</span><span class="token punctuation">)</span>
+<span class="token comment"># driver.get("http://www.santostang.com/2018/07/04/hello-world/")</span>
+comment <span class="token operator">=</span> driver<span class="token punctuation">.</span>find_element_by_css_selector<span class="token punctuation">(</span><span class="token string">'div.reply-content'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>find_element_by_tag_name<span class="token punctuation">(</span><span class="token string">'P'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>comment<span class="token punctuation">.</span>text<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>但是报错了<code>selenium.common.exceptions.NoSuchElementException: Message: Unable to locate element: div.reply-content</code></p>
+<p>使用<code>driver.page_source</code>审查，封装在了iframe框架里面</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#加入iframe解析</span>
+<span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>common<span class="token punctuation">.</span>by <span class="token keyword">import</span> By
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>firefox<span class="token punctuation">.</span>service <span class="token keyword">import</span> Service
+s <span class="token operator">=</span> Service<span class="token punctuation">(</span><span class="token string">r"D:\\GeckoDriver\\geckodriver.exe"</span><span class="token punctuation">)</span>
+<span class="token comment">#driver = webdriver.Firefox(executable_path="D:\GeckoDriver\geckodriver")</span>
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>service<span class="token operator">=</span>s<span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"http://www.santostang.com/2018/07/04/hello-world/"</span><span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>switch_to<span class="token punctuation">.</span>frame<span class="token punctuation">(</span>driver<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"iframe[title='livere-comment']"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+comment <span class="token operator">=</span> driver<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">'div.reply-content'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>TAG_NAME<span class="token punctuation">,</span> <span class="token string">'P'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>comment<span class="token punctuation">.</span>text<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>就可以得到评论内容了</p>
+<h4 id="获取所有评论"><a href="#获取所有评论" class="headerlink" title="获取所有评论"></a>获取所有评论</h4><h5 id="模拟点击加载评论"><a href="#模拟点击加载评论" class="headerlink" title="模拟点击加载评论"></a>模拟点击加载评论</h5><p>通过观察<code>button</code>标签，确定它</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>common<span class="token punctuation">.</span>by <span class="token keyword">import</span> By
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>firefox<span class="token punctuation">.</span>service <span class="token keyword">import</span> Service
+<span class="token keyword">import</span> time
+s <span class="token operator">=</span> Service<span class="token punctuation">(</span><span class="token string">r"D:\\GeckoDriver\\geckodriver.exe"</span><span class="token punctuation">)</span>
+<span class="token comment">#driver = webdriver.Firefox(executable_path="D:\GeckoDriver\geckodriver")</span>
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>service<span class="token operator">=</span>s<span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"http://www.santostang.com/2018/07/04/hello-world/"</span><span class="token punctuation">)</span>
+time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment">#下滑到页面底部</span>
+    <span class="token comment">#driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")</span>
+    <span class="token comment">#解析frame,找到翻看评论，做出点击操作</span>
+    driver<span class="token punctuation">.</span>switch_to<span class="token punctuation">.</span>frame<span class="token punctuation">(</span>driver<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"iframe[title='livere-comment']"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    load_more <span class="token operator">=</span> driver<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"div.list-reduce button"</span><span class="token punctuation">)</span>
+    load_more<span class="token punctuation">.</span>click<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">#转回iframe</span>
+    driver<span class="token punctuation">.</span>switch_to<span class="token punctuation">.</span>default_content<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>switch_to<span class="token punctuation">.</span>frame<span class="token punctuation">(</span>driver<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"iframe[title='livere-comment']"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+comments <span class="token operator">=</span> driver<span class="token punctuation">.</span>find_elements<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"div.reply-content"</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> comment <span class="token keyword">in</span> comments<span class="token punctuation">:</span>
+    content <span class="token operator">=</span> comment<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>TAG_NAME<span class="token punctuation">,</span> <span class="token string">'p'</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span>text<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>selenium</code>实现自动操作网页：</p>
+<ul>
+<li>clear:清除元素内容</li>
+<li>send_keys 模拟键盘输入</li>
+<li>click 点击元素</li>
+<li>submit 提交表单</li>
+</ul>
+<h4 id="Selenium的高级操作"><a href="#Selenium的高级操作" class="headerlink" title="Selenium的高级操作"></a>Selenium的高级操作</h4><blockquote>
+<p>使用selenium控制浏览器加载的内容，从而加载爬取速度</p>
+</blockquote>
+<ul>
+<li>控制CSS的加载</li>
+<li>控制图片文件的加载</li>
+<li>控制js的执行</li>
+</ul>
+<h5 id="CSS控制"><a href="#CSS控制" class="headerlink" title="CSS控制"></a>CSS控制</h5><h5 id="限制图片的加载"><a href="#限制图片的加载" class="headerlink" title="限制图片的加载"></a>限制图片的加载</h5><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>firefox<span class="token punctuation">.</span>service <span class="token keyword">import</span> Service
+
+s <span class="token operator">=</span> Service<span class="token punctuation">(</span><span class="token string">r"D:\\GeckoDriver\\geckodriver.exe"</span><span class="token punctuation">)</span>
+options <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>FirefoxOptions<span class="token punctuation">(</span><span class="token punctuation">)</span>
+options<span class="token punctuation">.</span>set_preference<span class="token punctuation">(</span><span class="token string">'permissions.default.image'</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>service<span class="token operator">=</span>s<span class="token punctuation">,</span> options<span class="token operator">=</span>options<span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"http://www.santostang.com/2018/07/04/hello-world/"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225163004673.png" alt="image-20211225163004673" loading="lazy"></p>
+<h5 id="限制javascript的执行"><a href="#限制javascript的执行" class="headerlink" title="限制javascript的执行"></a>限制javascript的执行</h5><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>firefox<span class="token punctuation">.</span>service <span class="token keyword">import</span> Service
+
+s <span class="token operator">=</span> Service<span class="token punctuation">(</span><span class="token string">r"D:\\GeckoDriver\\geckodriver.exe"</span><span class="token punctuation">)</span>
+options <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>FirefoxOptions<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment"># options.set_preference('permissions.default.image',2)</span>
+options<span class="token punctuation">.</span>set_preference<span class="token punctuation">(</span><span class="token string">"javascript.enabled"</span><span class="token punctuation">,</span> <span class="token boolean">False</span><span class="token punctuation">)</span>
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>service<span class="token operator">=</span>s<span class="token punctuation">,</span> options<span class="token operator">=</span>options<span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"http://www.santostang.com/2018/07/04/hello-world/"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p><img src="image-20211225163311988.png" alt="image-20211225163311988" loading="lazy"></p>
+<h4 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h4><blockquote>
+<p>得到某房源的名称，价格，评价数量，房屋类型，床数量，访客数量</p>
+</blockquote>
+<h5 id="使用F12检查功能"><a href="#使用F12检查功能" class="headerlink" title="使用F12检查功能"></a>使用F12检查功能</h5><p>得到数据</p>
+<h5 id="开始抓取"><a href="#开始抓取" class="headerlink" title="开始抓取"></a>开始抓取</h5><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>firefox<span class="token punctuation">.</span>service <span class="token keyword">import</span> Service
+<span class="token keyword">from</span> selenium<span class="token punctuation">.</span>webdriver<span class="token punctuation">.</span>common<span class="token punctuation">.</span>by <span class="token keyword">import</span> By
+<span class="token keyword">import</span> time
+
+s <span class="token operator">=</span> Service<span class="token punctuation">(</span><span class="token string">r"D:\\GeckoDriver\\geckodriver.exe"</span><span class="token punctuation">)</span>
+driver <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Firefox<span class="token punctuation">(</span>service<span class="token operator">=</span>s<span class="token punctuation">)</span>
+driver<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"https://www.airbnb.cn/s/Shenzhen--China?page=1"</span><span class="token punctuation">)</span>
+time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+rent_list <span class="token operator">=</span> driver<span class="token punctuation">.</span>find_elements<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">'div._zhz0z8'</span><span class="token punctuation">)</span>
+time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> eachhouse <span class="token keyword">in</span> rent_list<span class="token punctuation">:</span>
+    name <span class="token operator">=</span> eachhouse<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">'div._qrfr9x5'</span><span class="token punctuation">)</span>
+    name <span class="token operator">=</span> name<span class="token punctuation">.</span>text
+    price <span class="token operator">=</span> eachhouse<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">'span._1d8yint7 :nth-child(2)'</span><span class="token punctuation">)</span>
+    price <span class="token operator">=</span> price<span class="token punctuation">.</span>text
+    comment <span class="token operator">=</span> eachhouse<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">'span._69pvqtq'</span><span class="token punctuation">)</span>
+    comment <span class="token operator">=</span> comment<span class="token punctuation">.</span>text
+    house_type <span class="token operator">=</span> eachhouse<span class="token punctuation">.</span>find_element<span class="token punctuation">(</span>By<span class="token punctuation">.</span>CSS_SELECTOR<span class="token punctuation">,</span> <span class="token string">"span[style='color: rgb(118, 118, 118);']"</span><span class="token punctuation">)</span>
+    house <span class="token operator">=</span> house_type<span class="token punctuation">.</span>text
+    house_type <span class="token operator">=</span> house<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">7</span><span class="token punctuation">]</span>
+    bedroom <span class="token operator">=</span> house<span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"---------------------------------"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"房源名称："</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"价格："</span><span class="token punctuation">,</span> price<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"评价数量："</span><span class="token punctuation">,</span> comment<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"房间类型："</span><span class="token punctuation">,</span> house_type<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"房间布局"</span><span class="token punctuation">,</span> bedroom<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"---------------------------------"</span><span class="token punctuation">)</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225175429389.png" alt="image-20211225175429389" loading="lazy"></p>
+<p>爬取多个页面的数据，通过观察<code>url</code>很明显可以发现page参数可变</p>
+<h4 id="解析网页"><a href="#解析网页" class="headerlink" title="解析网页"></a>解析网页</h4><h5 id="使用正则表达式解析网页"><a href="#使用正则表达式解析网页" class="headerlink" title="使用正则表达式解析网页"></a>使用正则表达式解析网页</h5><h6 id="正则的使用方法"><a href="#正则的使用方法" class="headerlink" title="正则的使用方法"></a>正则的使用方法</h6><ul>
+<li><p>re.match()</p>
+<blockquote>
+<p>re.match(pattern, string, flags=0) =&gt; 其中的flags是控制其匹配方式(是否区分大小写，多行匹配)</p>
+</blockquote>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> re
+m <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span><span class="token string">'www'</span><span class="token punctuation">,</span> <span class="token string">'www.baidu.com'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>span<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>start<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>end<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># &lt;re.Match object; span=(0, 3), match='www'> </span>
+<span class="token comment"># (0, 3)                                      </span>
+<span class="token comment"># 0                                           </span>
+<span class="token comment"># 3                                           </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以使用正则的方式匹配</p>
+<p>一般会在正则表达式前加上修饰字符<code>r</code>，<code>r&#39;\d&#39;</code>,这里的r是raw string的意思，不会对引号里面的<code>\</code>进行特殊处理</p>
+</li>
+<li><p>re.search()</p>
+<blockquote>
+<p>re.match()只能从字符串的起始位置开始匹配，re.search()能够扫描整个字符串，并返回第一个成功的匹配</p>
+</blockquote>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> re
+m <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span><span class="token string">'com'</span><span class="token punctuation">,</span> <span class="token string">'www.baidu.com'</span><span class="token punctuation">)</span>
+n <span class="token operator">=</span> re<span class="token punctuation">.</span>search<span class="token punctuation">(</span><span class="token string">'com'</span><span class="token punctuation">,</span> <span class="token string">'www.baidu.com'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+<span class="token comment"># None</span>
+<span class="token comment"># &lt;re.Match object; span=(10, 13), match='com'></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>re.findall()</p>
+<blockquote>
+<p>re.match()和re.search()只能找到一个匹配，就会停止匹配，但是re.findall()会找出所有满足的匹配项</p>
+</blockquote>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> re
+<span class="token builtin">str</span> <span class="token operator">=</span> <span class="token string">'1234 is the first number and 5678 is the second number!'</span>
+m_match <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span><span class="token string">'[0-9]+'</span><span class="token punctuation">,</span> <span class="token string">'1234 is the first number and 5678 is the second number!'</span><span class="token punctuation">)</span>
+m_search <span class="token operator">=</span> re<span class="token punctuation">.</span>search<span class="token punctuation">(</span><span class="token string">'[0-9]+'</span><span class="token punctuation">,</span> <span class="token builtin">str</span><span class="token punctuation">)</span>
+m_findall <span class="token operator">=</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span><span class="token string">'[0-9]+'</span><span class="token punctuation">,</span> <span class="token builtin">str</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m_match<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m_search<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>m_findall<span class="token punctuation">)</span>
+<span class="token comment"># 1234</span>
+<span class="token comment"># 1234</span>
+<span class="token comment"># ['1234', '5678']</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h5 id="使用bs4解析网页"><a href="#使用bs4解析网页" class="headerlink" title="使用bs4解析网页"></a>使用bs4解析网页</h5><blockquote>
+<p>上一篇文章已经讲了</p>
+</blockquote>
+<h6 id="遍历文档树"><a href="#遍历文档树" class="headerlink" title="遍历文档树"></a>遍历文档树</h6><ul>
+<li>利用contents输出子节点 <code>soup.header.div.contents</code></li>
+<li>利用<code>children</code>获取子标签 <code>soup.header.div.children</code></li>
+<li>利用<code>descendants</code>获取子子孙孙节点 <code>soup.header.div.descendants</code></li>
+<li>利用<code>parent</code>获取父节点 <code>soup.header.div.a.parent</code></li>
+</ul>
+<h6 id="搜索文档树"><a href="#搜索文档树" class="headerlink" title="搜索文档树"></a>搜索文档树</h6><ul>
+<li> find方法</li>
+<li>find_all方法</li>
+</ul>
+<p>上一篇文章已经使用过了</p>
+<p>这里可以配合正则进行使用</p>
+<p><code>soup.find_all(re.compile(&quot;^h&quot;))</code> =&gt; 匹配所有以h开头的标签</p>
+<h6 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h6><ul>
+<li>通过标签逐层寻找 <code>soup.select(&quot;header h3&quot;)</code></li>
+<li>通过某个标签的子标签遍历 <code>soup.select(&quot;div &gt; a&quot;)</code>,返回div标签下的所有a标签</li>
+<li>实现搜索文档的功能 <code>soup.select(&quot;a[href^=&#39;www.baidu.com&#39;]&quot;)</code> =&gt; 找到所有以<code>www.baidu.com</code>开头的a标签</li>
+</ul>
+<h5 id="利用lxml解析网页"><a href="#利用lxml解析网页" class="headerlink" title="利用lxml解析网页"></a>利用lxml解析网页</h5><p>获取所有标题</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+<span class="token keyword">from</span> lxml <span class="token keyword">import</span> etree
+
+url <span class="token operator">=</span> <span class="token string">"http://www.santostang.com/"</span>
+headers <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'User-Agent'</span><span class="token punctuation">:</span><span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'</span><span class="token punctuation">&#125;</span>
+res <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">)</span>
+html <span class="token operator">=</span> etree<span class="token punctuation">.</span>HTML<span class="token punctuation">(</span>res<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
+title_list <span class="token operator">=</span> html<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">"//h1[@class='post-title']/a/text()"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>title_list<span class="token punctuation">)</span>
+<span class="token comment">#['第四章 – 4.3 通过selenium 模拟浏览器抓取', '第四章 – 4.2 解析真实地址抓取', '第四章- 动态网页抓取 (解析真实地址 + selenium)', 'Hello world!']</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>XPath的选取方法</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">表达式</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">nodename</td>
+<td align="center">选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td align="center">/</td>
+<td align="center">从根节点选取</td>
+</tr>
+<tr>
+<td align="center">//</td>
+<td align="center">不考虑所选节点的位置</td>
+</tr>
+<tr>
+<td align="center">.</td>
+<td align="center">选取当前节点</td>
+</tr>
+<tr>
+<td align="center">..</td>
+<td align="center">选取父节点</td>
+</tr>
+<tr>
+<td align="center">@</td>
+<td align="center">选取属性</td>
+</tr>
+</tbody></table>
+<h4 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h4><p><strong>目标：</strong></p>
+<p>获取二手房源名称，价格，几房几厅，大小，建造年份，联系人，地址，标签。</p>
+<h5 id="使用F12的检查功能"><a href="#使用F12的检查功能" class="headerlink" title="使用F12的检查功能"></a>使用F12的检查功能</h5><h5 id="抓取第一页数据"><a href="#抓取第一页数据" class="headerlink" title="抓取第一页数据"></a>抓取第一页数据</h5><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#!/usr/bin/python</span>
+<span class="token comment"># coding: UTF-8</span>
+
+<span class="token keyword">import</span> requests
+<span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
+<span class="token keyword">import</span> time
+url <span class="token operator">=</span> <span class="token string">"https://beijing.anjuke.com/sale/p1/"</span>
+headers <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'User-Agent'</span><span class="token punctuation">:</span><span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'</span><span class="token punctuation">&#125;</span>
+
+respond <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">)</span>
+soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>respond<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">'lxml'</span><span class="token punctuation">)</span>
+house_list <span class="token operator">=</span> soup<span class="token punctuation">.</span>find_all<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> house <span class="token keyword">in</span> house_list<span class="token punctuation">:</span>
+    name <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'h3'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-content-title-name'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    price <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'p'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-price-total'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    house_type <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'p'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-content-info-text property-content-info-attribute'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    size <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-content-info'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contents<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    date <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-content-info'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contents<span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    connection_person <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-extra'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contents<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span>text
+    address <span class="token operator">=</span> house<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'property-content-info property-content-info-comm'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--------------------------------"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"名称："</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"价格："</span><span class="token punctuation">,</span> price<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"几房几厅："</span><span class="token punctuation">,</span> house_type<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"大小："</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"建造日期："</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"联系人："</span><span class="token punctuation">,</span> connection_person<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"地址："</span><span class="token punctuation">,</span> address<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--------------------------------"</span><span class="token punctuation">)</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225203549210.png" alt="image-20211225203549210" loading="lazy"></p>
+<h5 id="抓取前十页的数据"><a href="#抓取前十页的数据" class="headerlink" title="抓取前十页的数据"></a>抓取前十页的数据</h5><p>观察url的不同，可以通过for循环再加上前面的程序就可以实现抓取前十页的内容了</p>
+<h4 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h4><h5 id="基本存储"><a href="#基本存储" class="headerlink" title="基本存储"></a>基本存储</h5><h6 id="存储进入TXT文本"><a href="#存储进入TXT文本" class="headerlink" title="存储进入TXT文本"></a>存储进入TXT文本</h6><pre class="line-numbers language-python" data-language="python"><code class="language-python">title <span class="token operator">=</span> <span class="token string">"这是一个标题"</span>
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'test.txt'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    f<span class="token punctuation">.</span>write<span class="token punctuation">(</span>title<span class="token punctuation">)</span>
+    f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>打开文件的方式：</p>
+<table>
+<thead>
+<tr>
+<th align="center">读写方式</th>
+<th align="center">可否读写</th>
+<th align="center">若文件不存在</th>
+<th align="center">写入方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">w</td>
+<td align="center">写入</td>
+<td align="center">创建</td>
+<td align="center">覆盖写入</td>
+</tr>
+<tr>
+<td align="center">w+</td>
+<td align="center">读取+写入</td>
+<td align="center">创建</td>
+<td align="center">覆盖写入</td>
+</tr>
+<tr>
+<td align="center">r</td>
+<td align="center">读取</td>
+<td align="center">报错</td>
+<td align="center">不可写入</td>
+</tr>
+<tr>
+<td align="center">r+</td>
+<td align="center">读取+写入</td>
+<td align="center">报错</td>
+<td align="center">覆盖写入</td>
+</tr>
+<tr>
+<td align="center">a</td>
+<td align="center">写入</td>
+<td align="center">创建</td>
+<td align="center">附加写入</td>
+</tr>
+<tr>
+<td align="center">a+</td>
+<td align="center">读取+写入</td>
+<td align="center">创建</td>
+<td align="center">附加写入</td>
+</tr>
+</tbody></table>
+<p>join方法：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">title <span class="token operator">=</span> <span class="token string">'\t'</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'title'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'test.txt'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    f<span class="token punctuation">.</span>write<span class="token punctuation">(</span>title<span class="token punctuation">)</span>
+    f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h6 id="存储进入CSV"><a href="#存储进入CSV" class="headerlink" title="存储进入CSV"></a>存储进入CSV</h6><blockquote>
+<p>CSV是一种以逗号分隔值的文件类型，既可以使用记事本打开，也可以是用Excel打开</p>
+</blockquote>
+<p>读取CSV文件的方法：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> csv
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'test.csv'</span><span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'UTF-8'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    csv_reader <span class="token operator">=</span> csv<span class="token punctuation">.</span>reader<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> row <span class="token keyword">in</span> csv_reader<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span>
+        
+<span class="token comment"># 将每一行转换为列表</span>
+<span class="token comment"># 每个元素是一个字符串</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>写入CSV文件的方法：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> csv
+output_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span>
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'test.csv'</span><span class="token punctuation">,</span> <span class="token string">'a+'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'UTF-8'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    csv_writer <span class="token operator">=</span> csv<span class="token punctuation">.</span>writer<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+    csv_writer<span class="token punctuation">.</span>writerow<span class="token punctuation">(</span>output_list<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225210640901.png" alt="image-20211225210640901" loading="lazy"></p>
+<h5 id="存储到mysql数据库"><a href="#存储到mysql数据库" class="headerlink" title="存储到mysql数据库"></a>存储到mysql数据库</h5><ul>
+<li><p>建立<code>scraping</code>库</p>
+</li>
+<li><p>创建<code>urls</code>表</p>
+<blockquote>
+<p>表结构：</p>
+<p>create table urls(id int not null auto_increment, url varchar(1000) not null, content varchar(4000) not null, created_time timestamp default current_timestamp, primary key (id));</p>
+</blockquote>
+</li>
+</ul>
+<h6 id="python操控mysql"><a href="#python操控mysql" class="headerlink" title="python操控mysql"></a>python操控mysql</h6><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pymysql<span class="token punctuation">.</span>cursors <span class="token keyword">import</span> Cursor
+
+db <span class="token operator">=</span> pymysql<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>host<span class="token operator">=</span><span class="token string">'localhost'</span><span class="token punctuation">,</span> user<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> passwd<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> database<span class="token operator">=</span><span class="token string">'scraping'</span><span class="token punctuation">)</span>
+cur <span class="token operator">=</span> db<span class="token punctuation">.</span>cursor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+cur<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token string">'select version()'</span><span class="token punctuation">)</span>
+data <span class="token operator">=</span> cur<span class="token punctuation">.</span>fetchone<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+db<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以得到mysql版本号</p>
+<p>插入数据：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> pymysql
+<span class="token keyword">from</span> pymysql<span class="token punctuation">.</span>cursors <span class="token keyword">import</span> Cursor
+
+db <span class="token operator">=</span> pymysql<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>host<span class="token operator">=</span><span class="token string">'localhost'</span><span class="token punctuation">,</span> user<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> passwd<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> database<span class="token operator">=</span><span class="token string">'scraping'</span><span class="token punctuation">)</span>
+cur <span class="token operator">=</span> db<span class="token punctuation">.</span>cursor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+cur<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token string">"insert into urls (url, content) values('www.baidu.com', 'This is the content.')"</span><span class="token punctuation">)</span>
+cur<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+db<span class="token punctuation">.</span>commit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+db<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225215407861.png" alt="image-20211225215407861" loading="lazy"></p>
+<p>成功插入数据</p>
+<p>我们可以考虑将之前抓取到的title和对应的url存入数据库中</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> pymysql
+<span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
+<span class="token keyword">import</span> requests
+
+db <span class="token operator">=</span> pymysql<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>host<span class="token operator">=</span><span class="token string">'localhost'</span><span class="token punctuation">,</span> user<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> passwd<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> database<span class="token operator">=</span><span class="token string">'scraping'</span><span class="token punctuation">,</span> charset<span class="token operator">=</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+cur <span class="token operator">=</span> db<span class="token punctuation">.</span>cursor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+url <span class="token operator">=</span> <span class="token string">"http://www.santostang.com/"</span>
+headers <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'User-Agent'</span><span class="token punctuation">:</span><span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'</span><span class="token punctuation">&#125;</span>
+res <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">)</span>
+soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>res<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">'lxml'</span><span class="token punctuation">)</span>
+title_list <span class="token operator">=</span> soup<span class="token punctuation">.</span>find_all<span class="token punctuation">(</span><span class="token string">'h1'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'post-title'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> eachtitle <span class="token keyword">in</span> title_list<span class="token punctuation">:</span>
+    url <span class="token operator">=</span> eachtitle<span class="token punctuation">.</span>a<span class="token punctuation">[</span><span class="token string">'href'</span><span class="token punctuation">]</span>
+    title <span class="token operator">=</span> eachtitle<span class="token punctuation">.</span>a<span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    cur<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token string">"insert into urls (url, content) values (%s, %s)"</span><span class="token punctuation">,</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> title<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+cur<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+db<span class="token punctuation">.</span>commit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+db<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211225221927663.png" alt="image-20211225221927663" loading="lazy"></p>
+<p>成功插入数据库中</p>
+<p><strong>注</strong>：如果mysql查询中文乱码时：</p>
+<p><code>show variables like &#39;character%&#39;;</code>查看字符编码</p>
+<p><code>set names gbk;</code>设置字符编码格式</p>
+<h5 id="存储到mongodb数据库"><a href="#存储到mongodb数据库" class="headerlink" title="存储到mongodb数据库"></a>存储到mongodb数据库</h5><h6 id="python操控mongodb"><a href="#python操控mongodb" class="headerlink" title="python操控mongodb"></a>python操控mongodb</h6><p>下载<code>pymongo</code>库<code>pip3 install pymongo</code></p>
+<p>将之前抓取的数据存入：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> pymongo
+<span class="token keyword">import</span> requests
+<span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
+<span class="token keyword">import</span> time
+
+client <span class="token operator">=</span> pymongo<span class="token punctuation">.</span>MongoClient<span class="token punctuation">(</span><span class="token string">"mongodb://localhost/"</span><span class="token punctuation">)</span>
+db <span class="token operator">=</span> client<span class="token punctuation">.</span>scraping
+collection <span class="token operator">=</span> db<span class="token punctuation">.</span>blog
+
+url <span class="token operator">=</span> <span class="token string">"http://www.santostang.com/"</span>
+headers <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'User-Agent'</span><span class="token punctuation">:</span><span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'</span><span class="token punctuation">&#125;</span>
+res <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">)</span>
+soup <span class="token operator">=</span> BeautifulSoup<span class="token punctuation">(</span>res<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">'lxml'</span><span class="token punctuation">)</span>
+title_list <span class="token operator">=</span> soup<span class="token punctuation">.</span>find_all<span class="token punctuation">(</span><span class="token string">'h1'</span><span class="token punctuation">,</span> class_<span class="token operator">=</span><span class="token string">'post-title'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> eachtitle <span class="token keyword">in</span> title_list<span class="token punctuation">:</span>
+    url <span class="token operator">=</span> eachtitle<span class="token punctuation">.</span>a<span class="token punctuation">[</span><span class="token string">'href'</span><span class="token punctuation">]</span>
+    title <span class="token operator">=</span> eachtitle<span class="token punctuation">.</span>a<span class="token punctuation">.</span>text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    post <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+        <span class="token string">"url"</span><span class="token punctuation">:</span>url<span class="token punctuation">,</span>
+        <span class="token string">"title"</span><span class="token punctuation">:</span>title<span class="token punctuation">,</span>
+        <span class="token string">"date"</span><span class="token punctuation">:</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">"%Y-%m-%d %X"</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+    collection<span class="token punctuation">.</span>insert_one<span class="token punctuation">(</span>post<span class="token punctuation">)</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="image-20211226165119270.png" alt="image-20211226165119270" loading="lazy"></p>
+<p>成功保存入<code>mongodb</code>数据库</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>RoboTerh</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/" title="Python爬虫(二)">https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\nPost author: RoboTerh\nPost link: https://roboterh.github.io/2021/12/19/Python%E7%88%AC%E8%99%AB-%E4%BA%8C/\nCopyright Notice: All articles in this blog are licensed under CC BY-NC-SA 4.0 unless otherwise stated.');
+  }
+});</script></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/12/26/Python%E7%88%AC%E8%99%AB-%E4%B8%89/" rel="prev" title="Python爬虫(三)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Python爬虫(三)</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/12/17/Python%E7%88%AC%E8%99%AB-%E4%B8%80/" rel="next" title="Python爬虫(一)"><span class="post-nav-text">Python爬虫(一)</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RoboTerh</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
